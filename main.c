@@ -21,6 +21,7 @@ void set_term_fg(struct Terminal *terminal, enum Color color);
 void set_term_bg(struct Terminal *terminal, enum Color color);
 void term_reset(struct Terminal *terminal);
 uint32_t string_len(const char *text);
+const char *string_at(const char *src, size_t pos);
 
 int main() {
     struct Terminal terminal = get_terminal();
@@ -32,6 +33,17 @@ int main() {
     const char *text = "‚ ‚¢‚¤‚¦‚¨";
     puts(text);
     printf("len: %u\n", string_len(text));
+
+    for (int i = 0;; i++) {
+        const char *fragment = string_at(text, i);
+
+        if (fragment == NULL) {
+            break;
+        }
+
+        printf("pos %d: %s\n", i, fragment);
+        free((void *)fragment);
+    }
 
     term_reset(&terminal);
     return 0;
@@ -98,4 +110,34 @@ uint32_t string_len(const char *text) {
     }
 
     return count;
+}
+
+// requires to be freed!
+const char *string_at(const char *src, size_t target_pos) {
+    size_t index = 0;
+    size_t pos = 0;
+
+    while (src[index] != '\0') {
+        int len = mblen(&src[index], MB_CUR_MAX);
+
+        if (len < 0) {
+            failure("mblen returned error: %d", len);
+        }
+
+        if (pos == target_pos) {
+            char *output = malloc(len + 1);
+
+            for (size_t i = 0; i < len; i++) {
+                output[i] = src[index + i];
+            }
+
+            output[len] = '\0';
+            return output;
+        }
+
+        index += len;
+        pos += 1;
+    }
+
+    return NULL;
 }
