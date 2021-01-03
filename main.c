@@ -9,6 +9,7 @@
     fprintf(stderr, __VA_ARGS__);                                              \
     exit(1)
 
+#define fmt_bool(bool) bool ? "true" : "false"
 enum Color { RED, GREEN };
 
 struct Terminal {
@@ -22,6 +23,7 @@ void set_term_bg(struct Terminal *terminal, enum Color color);
 void term_reset(struct Terminal *terminal);
 uint32_t string_len(const char *text);
 const char *string_at(const char *src, size_t pos);
+bool string_eq(const char *a, const char *b);
 
 int main() {
     struct Terminal terminal = get_terminal();
@@ -30,20 +32,17 @@ int main() {
         failure("failed to set locale");
     }
 
-    const char *text = "‚ ‚¢‚¤‚¦‚¨";
-    puts(text);
-    printf("len: %u\n", string_len(text));
+    struct Terminal terminal = get_term();
 
-    for (int i = 0;; i++) {
-        const char *fragment = string_at(text, i);
+    const char *word1 = "‚ ‚¢‚·‚ª‚½‚×‚½‚¢‚È";
+    const char *word2 = "‚ ‚¢‚·‚ª‚½‚×‚½‚¢‚È";
+    const char *word3 = "‚ ‚¢‚·‚ª‚¾‚×‚½‚¢‚È";
+    const char *word4 = "abcde";
 
-        if (fragment == NULL) {
-            break;
-        }
+    printf("%s %s %s\n", fmt_bool(string_eq(word1, word2)),
+           fmt_bool(string_eq(word1, word3)),
+           fmt_bool(string_eq(word1, word4)));
 
-        printf("pos %d: %s\n", i, fragment);
-        free((void *)fragment);
-    }
 
     term_reset(&terminal);
     return 0;
@@ -140,4 +139,16 @@ const char *string_at(const char *src, size_t target_pos) {
     }
 
     return NULL;
+}
+
+bool string_eq(const char *a, const char *b) {
+    for (size_t index = 0;; index++) {
+        if (a[index] != b[index]) {
+            return false;
+        }
+
+        if (a[index] == '\0') {
+            return true;
+        }
+    }
 }
