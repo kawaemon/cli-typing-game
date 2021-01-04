@@ -18,7 +18,8 @@ enum Color { RED, GREEN };
 
 struct Terminal {
     HANDLE console_handle;
-    CONSOLE_SCREEN_BUFFER_INFO origin_info;
+    CONSOLE_SCREEN_BUFFER_INFO origin_buffer_info;
+    CONSOLE_CURSOR_INFO origin_cursor_info;
 };
 
 struct Slice {
@@ -26,7 +27,9 @@ struct Slice {
     const char **pointer;
 };
 
+// https://docs.microsoft.com/en-us/windows/console/console-functions
 struct Terminal get_term();
+void set_term_cursor_visible(struct Terminal *terminal, bool visible);
 void set_term_fg(struct Terminal *terminal, enum Color color);
 void set_term_bg(struct Terminal *terminal, enum Color color);
 void term_reset(struct Terminal *terminal);
@@ -65,6 +68,7 @@ int main() {
             }
         }
 
+        set_term_cursor_visible(&terminal, false);
         const char input = _getch();
 
         if (input == ESC_KEY) {
@@ -97,11 +101,22 @@ int main() {
 struct Terminal get_term() {
     HANDLE console_handle = GetStdHandle(STD_OUTPUT_HANDLE);
 
-    CONSOLE_SCREEN_BUFFER_INFO console_info;
-    GetConsoleScreenBufferInfo(console_handle, &console_info);
+    CONSOLE_SCREEN_BUFFER_INFO buffer_info;
+    GetConsoleScreenBufferInfo(console_handle, &buffer_info);
 
-    struct Terminal result = {console_handle, console_info};
+    CONSOLE_CURSOR_INFO cursor_info;
+    GetConsoleCursorInfo(console_handle, &cursor_info);
+
+    struct Terminal result = {console_handle, buffer_info, cursor_info};
     return result;
+}
+
+void set_term_cursor_visible(struct Terminal *terminal, bool visible) {
+    CONSOLE_CURSOR_INFO info = terminal->origin_cursor_info;
+
+    info.bVisible = visible;
+
+    SetConsoleCursorInfo(terminal->console_handle, &info);
 }
 
 void set_term_fg(struct Terminal *terminal, enum Color color) {
@@ -136,7 +151,9 @@ void set_term_bg(struct Terminal *terminal, enum Color color) {
 
 void term_reset(struct Terminal *terminal) {
     SetConsoleTextAttribute(terminal->console_handle,
-                            terminal->origin_info.wAttributes);
+                            terminal->origin_buffer_info.wAttributes);
+    SetConsoleCursorInfo(terminal->console_handle,
+                         &terminal->origin_cursor_info);
 }
 
 uint32_t string_len(const char *text) {
