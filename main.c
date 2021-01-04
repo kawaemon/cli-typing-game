@@ -8,9 +8,26 @@
 
 #define ESC_KEY 27
 
-#define failure(...)                                                           \
-    fprintf(stderr, __VA_ARGS__);                                              \
-    exit(1)
+#define printfln(text, ...) printf(text "\n", __VA_ARGS__)
+#define fprintfln(stream, text, ...) fprintf(stream, text "\n", __VA_ARGS__)
+
+#define failure(msg, ...)                                                      \
+    failure_hook();                                                            \
+    fprintfln(stderr, "at L%d: " msg, __LINE__, __VA_ARGS__);                  \
+    exit(1);
+
+#define unreachable() failure("expected to be unreachable code executed");
+
+#define assert(condition, msg, ...)                                            \
+    if (!(condition)) {                                                        \
+        failure(msg, __VA_ARGS__);                                             \
+    }
+
+#define safe_free(pointer)                                                     \
+    if (pointer == NULL) {                                                     \
+        failure("at line %d, attempted to free NULL pointer.\n", __LINE__);    \
+    }                                                                          \
+    free((void *)pointer);
 
 #define fmt_bool(b) b ? "true" : "false"
 
@@ -28,6 +45,7 @@ struct StringSlice {
 };
 
 // https://docs.microsoft.com/en-us/windows/console/console-functions
+void failure_hook();
 struct Terminal get_term();
 void set_term_cursor_visible(struct Terminal *terminal, bool visible);
 void set_term_fg(struct Terminal *terminal, enum Color color);
@@ -38,12 +56,17 @@ const char *string_at(const char *src, size_t pos);
 bool string_eq(const char *a, const char *b);
 const struct StringSlice *get_roma(const char *hiragana);
 
+// GLOBAL VARIABLE DEFINITION
+struct Terminal TERMINAL;
+
 int main() {
     if (setlocale(LC_CTYPE, "") == NULL) {
-        failure("failed to set locale");
+        // cannot use failure macro because TERMINAL is not initialized.
+        fprintfln(stderr, "failed to set locale");
+        return 1;
     }
 
-    struct Terminal terminal = get_term();
+    TERMINAL = get_term();
 
     const char *word = "‚ ‚¢‚·‚ª‚½‚×‚½‚¢‚È";
 
@@ -58,17 +81,17 @@ int main() {
             bool is_typed = index < char_index;
 
             if (is_typed) {
-                set_term_fg(&terminal, GREEN);
+                set_term_fg(&TERMINAL, GREEN);
             }
 
             printf("%s", character);
 
             if (is_typed) {
-                term_reset(&terminal);
+                term_reset(&TERMINAL);
             }
         }
 
-        set_term_cursor_visible(&terminal, false);
+        set_term_cursor_visible(&TERMINAL, false);
         const char input = _getch();
 
         if (input == ESC_KEY) {
@@ -77,7 +100,7 @@ int main() {
 
         const char *current_char = string_at(word, char_index);
         const struct StringSlice *romas = get_roma(current_char);
-        free((void *)current_char);
+        safe_free(current_char);
 
         for (size_t roma_index = 0; roma_index < romas->length; roma_index++) {
             const char *roma = romas->pointer[roma_index];
@@ -94,9 +117,11 @@ int main() {
         }
     }
 
-    term_reset(&terminal);
+    term_reset(&TERMINAL);
     return 0;
 }
+
+void failure_hook() { term_reset(&TERMINAL); }
 
 struct Terminal get_term() {
     HANDLE console_handle = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -112,6 +137,9 @@ struct Terminal get_term() {
 }
 
 void set_term_cursor_visible(struct Terminal *terminal, bool visible) {
+    assert(terminal != NULL,
+           "passed NULL to set_term_cursor_visible(terminal)");
+
     CONSOLE_CURSOR_INFO info = terminal->origin_cursor_info;
 
     info.bVisible = visible;
@@ -120,6 +148,8 @@ void set_term_cursor_visible(struct Terminal *terminal, bool visible) {
 }
 
 void set_term_fg(struct Terminal *terminal, enum Color color) {
+    assert(terminal != NULL, "passed NULL to set_term_fg(terminal)");
+
     WORD win_color;
 
     switch (color) {
@@ -135,6 +165,8 @@ void set_term_fg(struct Terminal *terminal, enum Color color) {
 }
 
 void set_term_bg(struct Terminal *terminal, enum Color color) {
+    assert(terminal != NULL, "passed NULL to set_term_bg(terminal)");
+
     WORD win_color;
 
     switch (color) {
@@ -150,6 +182,8 @@ void set_term_bg(struct Terminal *terminal, enum Color color) {
 }
 
 void term_reset(struct Terminal *terminal) {
+    assert(terminal != NULL, "passed NULL to term_reset(terminal)");
+
     SetConsoleTextAttribute(terminal->console_handle,
                             terminal->origin_buffer_info.wAttributes);
     SetConsoleCursorInfo(terminal->console_handle,
@@ -157,6 +191,8 @@ void term_reset(struct Terminal *terminal) {
 }
 
 uint32_t string_len(const char *text) {
+    assert(text != NULL, "passed NULL to string_len(text)");
+
     int32_t count = 0;
     size_t index = 0;
 
@@ -176,6 +212,8 @@ uint32_t string_len(const char *text) {
 
 // requires to be freed!
 const char *string_at(const char *src, size_t target_pos) {
+    assert(src != NULL, "passed NULL to string_at(src)");
+
     size_t index = 0;
     size_t pos = 0;
 
@@ -205,6 +243,9 @@ const char *string_at(const char *src, size_t target_pos) {
 }
 
 bool string_eq(const char *a, const char *b) {
+    assert(a != NULL, "passed NULL to string_at(a)");
+    assert(b != NULL, "passed NULL to string_at(b)");
+
     for (size_t index = 0;; index++) {
         if (a[index] != b[index]) {
             return false;
@@ -224,6 +265,8 @@ bool string_eq(const char *a, const char *b) {
     }
 
 const struct StringSlice *get_roma(const char *hiragana) {
+    assert(hiragana != NULL, "passed NULL to get_roma(hiragana)");
+
     __GET_ROMA_IMPL("‚ ", 1, "a")
     __GET_ROMA_IMPL("‚¢", 1, "i")
     __GET_ROMA_IMPL("‚¤", 1, "u")
