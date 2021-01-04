@@ -22,7 +22,7 @@ struct Terminal {
     CONSOLE_CURSOR_INFO origin_cursor_info;
 };
 
-struct Slice {
+struct StringSlice {
     const size_t length;
     const char **pointer;
 };
@@ -36,7 +36,7 @@ void term_reset(struct Terminal *terminal);
 uint32_t string_len(const char *text);
 const char *string_at(const char *src, size_t pos);
 bool string_eq(const char *a, const char *b);
-const struct Slice *get_roma(const char *hiragana);
+const struct StringSlice *get_roma(const char *hiragana);
 
 int main() {
     if (setlocale(LC_CTYPE, "") == NULL) {
@@ -76,7 +76,7 @@ int main() {
         }
 
         const char *current_char = string_at(word, char_index);
-        const struct Slice *romas = get_roma(current_char);
+        const struct StringSlice *romas = get_roma(current_char);
         free((void *)current_char);
 
         for (size_t roma_index = 0; roma_index < romas->length; roma_index++) {
@@ -219,11 +219,11 @@ bool string_eq(const char *a, const char *b) {
 #define __GET_ROMA_IMPL(HIRAGANA, ROMAS_LEN, ...)                              \
     if (string_eq(hiragana, HIRAGANA)) {                                       \
         const static char *romas[] = {__VA_ARGS__};                            \
-        const static struct Slice data = {ROMAS_LEN, romas};                   \
+        const static struct StringSlice data = {ROMAS_LEN, romas};             \
         return &data;                                                          \
     }
 
-const struct Slice *get_roma(const char *hiragana) {
+const struct StringSlice *get_roma(const char *hiragana) {
     __GET_ROMA_IMPL("‚ ", 1, "a")
     __GET_ROMA_IMPL("‚¢", 1, "i")
     __GET_ROMA_IMPL("‚¤", 1, "u")
