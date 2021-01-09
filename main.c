@@ -45,8 +45,8 @@ struct StringSlice {
 };
 
 // https://docs.microsoft.com/en-us/windows/console/console-functions
-void failure_hook();
-struct Terminal get_term();
+void failure_hook(void);
+struct Terminal get_term(void);
 void set_term_cursor_visible(struct Terminal *terminal, bool visible);
 void set_term_fg(struct Terminal *terminal, enum Color color);
 void set_term_bg(struct Terminal *terminal, enum Color color);
@@ -59,7 +59,7 @@ const struct StringSlice *get_roma(const char *hiragana);
 // GLOBAL VARIABLE DEFINITION
 struct Terminal TERMINAL;
 
-int main() {
+int main(void) {
     if (setlocale(LC_CTYPE, "") == NULL) {
         // cannot use failure macro because TERMINAL is not initialized.
         fprintfln(stderr, "failed to set locale");
@@ -89,10 +89,12 @@ int main() {
             if (is_typed) {
                 term_reset(&TERMINAL);
             }
+
+            safe_free(character);
         }
 
         set_term_cursor_visible(&TERMINAL, false);
-        const char input = _getch();
+        const int input = _getch();
 
         if (input == ESC_KEY) {
             break;
@@ -159,6 +161,8 @@ void set_term_fg(struct Terminal *terminal, enum Color color) {
     case GREEN:
         win_color = FOREGROUND_GREEN;
         break;
+    default:
+        unreachable();
     }
 
     SetConsoleTextAttribute(terminal->console_handle, win_color);
@@ -176,6 +180,8 @@ void set_term_bg(struct Terminal *terminal, enum Color color) {
     case GREEN:
         win_color = BACKGROUND_GREEN;
         break;
+    default:
+        unreachable();
     }
 
     SetConsoleTextAttribute(terminal->console_handle, win_color);
@@ -227,7 +233,7 @@ const char *string_at(const char *src, size_t target_pos) {
         if (pos == target_pos) {
             char *output = malloc(len + 1);
 
-            for (size_t i = 0; i < len; i++) {
+            for (size_t i = 0; i < (size_t)len; i++) {
                 output[i] = src[index + i];
             }
 
