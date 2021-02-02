@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include <windows.h>
 
 #define ESC_KEY 27
@@ -31,12 +32,28 @@
 
 #define fmt_bool(b) b ? "true" : "false"
 
-enum Color { RED, GREEN };
+enum Color { RED, GREEN, WHITE };
 
 struct Terminal {
     HANDLE console_handle;
+    HANDLE game_buffer;
     CONSOLE_SCREEN_BUFFER_INFO origin_buffer_info;
     CONSOLE_CURSOR_INFO origin_cursor_info;
+};
+
+struct String {
+    const char *text;
+    size_t char_count;
+};
+
+struct Sentence {
+    struct String hiragana;
+    struct String origin;
+};
+
+struct SentenceSlice {
+    const size_t length;
+    struct Sentence *pointer;
 };
 
 struct StringSlice {
@@ -47,19 +64,24 @@ struct StringSlice {
 // https://docs.microsoft.com/en-us/windows/console/console-functions
 void failure_hook(void);
 struct Terminal get_term(void);
+void term_clear(struct Terminal *terminal);
 void set_term_cursor_visible(struct Terminal *terminal, bool visible);
 void set_term_fg(struct Terminal *terminal, enum Color color);
 void set_term_bg(struct Terminal *terminal, enum Color color);
 void term_reset(struct Terminal *terminal);
 uint32_t string_len(const char *text);
+size_t string_bytes(const char *text);
 const char *string_at(const char *src, size_t pos);
 bool string_eq(const char *a, const char *b);
+const struct SentenceSlice gen_random_words(size_t len);
+const struct Sentence random_word(void);
 const struct StringSlice *get_roma(const char *hiragana);
 
 // GLOBAL VARIABLE DEFINITION
 struct Terminal TERMINAL;
 
 int main(void) {
+    srand((unsigned)time(NULL));
     if (setlocale(LC_CTYPE, "") == NULL) {
         // cannot use failure macro because TERMINAL is not initialized.
         fprintfln(stderr, "failed to set locale");
@@ -68,29 +90,40 @@ int main(void) {
 
     TERMINAL = get_term();
 
-    const char *word = "あいすがたべたいな";
-
-    const uint32_t word_len = string_len(word);
+    const struct Sentence word = random_word();
     size_t char_index = 0;
     size_t char_inner_index = 0;
 
     while (true) {
-        printf("\r");
-        for (size_t index = 0; index < word_len; index++) {
-            const char *character = string_at(word, index);
-            bool is_typed = index < char_index;
+        term_clear(&TERMINAL);
 
-            if (is_typed) {
-                set_term_fg(&TERMINAL, GREEN);
+        // render
+        {
+            size_t loop_char_index = 0;
+            for (size_t index = 0; index < word.origin.char_count; index++) {
+                const char *character = string_at(word.origin.text, index);
+
+                if (string_eq(character, "|")) {
+                    loop_char_index += 1;
+                    continue;
+                }
+
+                bool is_typed = loop_char_index < char_index;
+
+                if (is_typed) {
+                    set_term_fg(&TERMINAL, GREEN);
+                }
+
+                DWORD data;
+                WriteConsole(TERMINAL.game_buffer, character,
+                             string_bytes(character), &data, NULL);
+
+                if (is_typed) {
+                    set_term_fg(&TERMINAL, WHITE);
+                }
+
+                safe_free(character);
             }
-
-            printf("%s", character);
-
-            if (is_typed) {
-                term_reset(&TERMINAL);
-            }
-
-            safe_free(character);
         }
 
         set_term_cursor_visible(&TERMINAL, false);
@@ -134,8 +167,27 @@ struct Terminal get_term() {
     CONSOLE_CURSOR_INFO cursor_info;
     GetConsoleCursorInfo(console_handle, &cursor_info);
 
-    struct Terminal result = {console_handle, buffer_info, cursor_info};
+    HANDLE game_buffer = CreateConsoleScreenBuffer(
+        GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL,
+        CONSOLE_TEXTMODE_BUFFER, NULL);
+
+    SetConsoleActiveScreenBuffer(game_buffer);
+
+    struct Terminal result = {.console_handle = console_handle,
+                              .game_buffer = game_buffer,
+                              .origin_buffer_info = buffer_info,
+                              .origin_cursor_info = cursor_info};
+
     return result;
+}
+
+void term_clear(struct Terminal *terminal) {
+    DWORD size = terminal->origin_buffer_info.dwSize.X *
+                 terminal->origin_buffer_info.dwSize.Y;
+    COORD pos = {0, 0};
+    DWORD written;
+    FillConsoleOutputCharacter(terminal->game_buffer, ' ', size, pos, &written);
+    SetConsoleCursorPosition(terminal->game_buffer, pos);
 }
 
 void set_term_cursor_visible(struct Terminal *terminal, bool visible) {
@@ -146,7 +198,7 @@ void set_term_cursor_visible(struct Terminal *terminal, bool visible) {
 
     info.bVisible = visible;
 
-    SetConsoleCursorInfo(terminal->console_handle, &info);
+    SetConsoleCursorInfo(terminal->game_buffer, &info);
 }
 
 void set_term_fg(struct Terminal *terminal, enum Color color) {
@@ -161,11 +213,14 @@ void set_term_fg(struct Terminal *terminal, enum Color color) {
     case GREEN:
         win_color = FOREGROUND_GREEN;
         break;
+    case WHITE:
+        win_color = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
+        break;
     default:
         unreachable();
     }
 
-    SetConsoleTextAttribute(terminal->console_handle, win_color);
+    SetConsoleTextAttribute(terminal->game_buffer, win_color);
 }
 
 void set_term_bg(struct Terminal *terminal, enum Color color) {
@@ -180,11 +235,14 @@ void set_term_bg(struct Terminal *terminal, enum Color color) {
     case GREEN:
         win_color = BACKGROUND_GREEN;
         break;
+    case WHITE:
+        win_color = BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE;
+        break;
     default:
         unreachable();
     }
 
-    SetConsoleTextAttribute(terminal->console_handle, win_color);
+    SetConsoleTextAttribute(terminal->game_buffer, win_color);
 }
 
 void term_reset(struct Terminal *terminal) {
@@ -194,6 +252,7 @@ void term_reset(struct Terminal *terminal) {
                             terminal->origin_buffer_info.wAttributes);
     SetConsoleCursorInfo(terminal->console_handle,
                          &terminal->origin_cursor_info);
+    SetConsoleActiveScreenBuffer(terminal->console_handle);
 }
 
 uint32_t string_len(const char *text) {
@@ -214,6 +273,18 @@ uint32_t string_len(const char *text) {
     }
 
     return count;
+}
+
+size_t string_bytes(const char *text) {
+    assert(text != NULL, "passed NULL to string_bytes(text)");
+    size_t result = 0;
+
+    while (true) {
+        if (text[result] == '\0') {
+            return result;
+        }
+        result += 1;
+    }
 }
 
 // requires to be freed!
@@ -263,10 +334,38 @@ bool string_eq(const char *a, const char *b) {
     }
 }
 
+// requires to be freed!
+const struct SentenceSlice gen_random_words(size_t len) {
+    struct Sentence *result_mem = malloc(sizeof(struct Sentence) * len);
+
+    for (size_t i = 0; i < len; i++) {
+        result_mem[i] = random_word();
+    }
+
+    const struct SentenceSlice result = {.length = len, .pointer = result_mem};
+    return result;
+}
+
+#define STRING_DEFINITION(TEXT)                                                \
+    { .text = TEXT, .char_count = string_len(TEXT) }
+
+const struct Sentence random_word() {
+    const struct Sentence word1 = {
+        .hiragana =
+            STRING_DEFINITION("わたし|は|ぷ|ろ|ぐ|ら|み|ん|ぐ|が|す|き|で|す"),
+        .origin =
+            STRING_DEFINITION("私|は|プ|ロ|グ|ラ|ミ|ン|グ|が|好|き|で|す"),
+    };
+
+    // TODO: multiple sentence
+    return word1;
+}
+
 #define __GET_ROMA_IMPL(HIRAGANA, ROMAS_LEN, ...)                              \
     if (string_eq(hiragana, HIRAGANA)) {                                       \
         const static char *romas[] = {__VA_ARGS__};                            \
-        const static struct StringSlice data = {ROMAS_LEN, romas};             \
+        const static struct StringSlice data = {.length = ROMAS_LEN,           \
+                                                .pointer = romas};             \
         return &data;                                                          \
     }
 
@@ -349,6 +448,7 @@ const struct StringSlice *get_roma(const char *hiragana) {
     __GET_ROMA_IMPL("ぅ", 2, "xu", "lu")
     __GET_ROMA_IMPL("ぇ", 2, "xe", "le")
     __GET_ROMA_IMPL("ぉ", 2, "xo", "lo")
+    __GET_ROMA_IMPL("っ", 2, "xtu", "ltu")
 
     return NULL;
 }
