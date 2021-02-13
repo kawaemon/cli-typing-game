@@ -1,3 +1,4 @@
+#pragma once
 struct CharVector {
     char *pointer;
     size_t length;
