@@ -1,3 +1,7 @@
+#ifdef _WIN32
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+
 #include <conio.h>
 #include <locale.h>
 #include <stdbool.h>
@@ -14,7 +18,9 @@
 
 #define failure(msg, ...)                                                      \
     failure_hook();                                                            \
-    fprintfln(stderr, "at L%d: " msg, __LINE__, __VA_ARGS__);                  \
+    FILE *__err_log_file = fopen("error.log", "w+");                           \
+    fprintfln(__err_log_file, "at L%d: " msg, __LINE__, __VA_ARGS__);          \
+    fclose(__err_log_file);                                                    \
     exit(1);
 
 #define unreachable() failure("expected to be unreachable code executed");
@@ -133,7 +139,7 @@ int main(void) {
             break;
         }
 
-        const char *current_char = string_at(word, char_index);
+        const char *current_char = string_at(word.hiragana.text, char_index);
         const struct StringSlice *romas = get_roma(current_char);
         safe_free(current_char);
 
@@ -450,5 +456,5 @@ const struct StringSlice *get_roma(const char *hiragana) {
     __GET_ROMA_IMPL("‚§", 2, "xo", "lo")
     __GET_ROMA_IMPL("‚Á", 2, "xtu", "ltu")
 
-    return NULL;
+    failure("couldn't find such character in get_roma", hiragana);
 }
