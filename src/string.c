@@ -1,5 +1,6 @@
 #include "string.h"
 #include "assert.h"
+#include "vector.h"
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -37,7 +38,7 @@ size_t string_bytes(const char *text) {
 }
 
 // requires to be freed!
-const char *string_at(const char *src, size_t target_pos) {
+struct CharVector string_at(const char *src, size_t target_pos) {
     assert(src != NULL, "passed NULL to string_at(src)");
 
     size_t index = 0;
@@ -51,13 +52,13 @@ const char *string_at(const char *src, size_t target_pos) {
         }
 
         if (pos == target_pos) {
-            char *output = malloc(len + 1);
+            struct CharVector output = char_vector_new();
 
             for (size_t i = 0; i < (size_t)len; i++) {
-                output[i] = src[index + i];
+                char_vector_push(&output, src[index + 1]);
             }
 
-            output[len] = '\0';
+            char_vector_push(&output, '\0');
             return output;
         }
 
@@ -65,7 +66,8 @@ const char *string_at(const char *src, size_t target_pos) {
         pos += 1;
     }
 
-    return NULL;
+    failure("there is no char on specific position. text: \"%s\", pos: \"%d\"",
+            src, target_pos);
 }
 
 bool string_eq(const char *a, const char *b) {

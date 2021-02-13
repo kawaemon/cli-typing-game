@@ -1,4 +1,5 @@
 #pragma once
+#include "vector.h"
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -9,5 +10,5 @@ struct String {
 
 uint32_t string_len(const char *text);
 size_t string_bytes(const char *text);
-const char *string_at(const char *src, size_t pos);
+struct CharVector string_at(const char *src, size_t pos);
 bool string_eq(const char *a, const char *b);
