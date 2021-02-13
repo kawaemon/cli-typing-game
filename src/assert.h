@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 #define failure(msg, ...)                                                      \
     failure_hook(__LINE__, msg, __VA_ARGS__);                                  \
     exit(1);
