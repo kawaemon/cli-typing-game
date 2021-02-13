@@ -32,6 +32,7 @@ void char_vector_push(struct CharVector *self, char value) {
 
     if (self->capacity == self->length) {
         self->pointer = realloc(self->pointer, self->capacity * 2);
+        self->capacity *= 2;
     }
 
     self->pointer[self->length] = value;
