@@ -6,7 +6,7 @@
 
 const size_t INITIAL_CAPACITY = 2;
 
-struct CharVector char_vector_new() {
+struct CharVector char_vector_new(void) {
     const struct CharVector result = {
         .pointer = malloc(sizeof(char) * INITIAL_CAPACITY),
         .length = 0,
