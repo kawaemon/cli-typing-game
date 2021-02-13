@@ -39,6 +39,30 @@ void char_vector_push(struct CharVector *self, char value) {
     self->length += 1;
 }
 
+void char_vector_pushstr(struct CharVector *self, const char *str) {
+    assert(self != NULL, "passed NULL to char_vector_push(self)");
+    assert(str != NULL, "passed NULL to char_vector_pushstr(str)");
+    assert(self->pointer != NULL, "passed freed or invalid CharVector");
+
+    size_t index = 0;
+    while (str[index] != '\0') {
+        char_vector_push(self, str[index]);
+        index += 1;
+    }
+}
+
+char char_vector_pop(struct CharVector *self) {
+    assert(self != NULL, "passed NULL to char_vector_push(self)");
+    assert(self->pointer != NULL, "passed freed or invalid CharVector");
+
+    char result = self->pointer[self->length - 1];
+
+    self->pointer[self->length - 1] = 0;
+    self->length -= 1;
+
+    return result;
+}
+
 void char_vector_free(struct CharVector *self) {
     assert(self != NULL, "passed NULL to char_vector_push");
     assert(self->pointer != NULL, "passed freed or invalid CharVector");
