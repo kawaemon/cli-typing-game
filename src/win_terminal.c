@@ -40,9 +40,9 @@ void term_clear(struct Terminal *terminal) {
     SetConsoleCursorPosition(terminal->game_buffer, pos);
 }
 
-void set_term_cursor_visible(struct Terminal *terminal, bool visible) {
+void term_set_cursor_visible(struct Terminal *terminal, bool visible) {
     assert(terminal != NULL,
-           "passed NULL to set_term_cursor_visible(terminal)");
+           "passed NULL to term_set_cursor_visible(terminal)");
 
     CONSOLE_CURSOR_INFO info = terminal->origin_cursor_info;
 
@@ -51,8 +51,8 @@ void set_term_cursor_visible(struct Terminal *terminal, bool visible) {
     SetConsoleCursorInfo(terminal->game_buffer, &info);
 }
 
-void set_term_fg(struct Terminal *terminal, enum TerminalColor color) {
-    assert(terminal != NULL, "passed NULL to set_term_fg(terminal)");
+void term_set_fg(struct Terminal *terminal, enum TerminalColor color) {
+    assert(terminal != NULL, "passed NULL to term_set_fg(terminal)");
 
     WORD win_color;
 
@@ -73,8 +73,8 @@ void set_term_fg(struct Terminal *terminal, enum TerminalColor color) {
     SetConsoleTextAttribute(terminal->game_buffer, win_color);
 }
 
-void set_term_bg(struct Terminal *terminal, enum TerminalColor color) {
-    assert(terminal != NULL, "passed NULL to set_term_bg(terminal)");
+void term_set_bg(struct Terminal *terminal, enum TerminalColor color) {
+    assert(terminal != NULL, "passed NULL to term_set_bg(terminal)");
 
     WORD win_color;
 
