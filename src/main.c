@@ -1,6 +1,6 @@
 #include "assert.h"
+#include "char_vector.h"
 #include "terminal.h"
-#include "vector.h"
 #include "word.h"
 #include <locale.h>
 #include <stdbool.h>

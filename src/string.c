@@ -1,6 +1,6 @@
 #include "string.h"
 #include "assert.h"
-#include "vector.h"
+#include "char_vector.h"
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
