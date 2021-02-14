@@ -112,6 +112,8 @@ void term_reset(struct Terminal *terminal) {
                          &terminal->origin_cursor_info);
     SetConsoleActiveScreenBuffer(terminal->console_handle);
     CloseHandle(terminal->game_buffer);
+    CloseHandle(terminal->stdin_handle);
+    CloseHandle(terminal->console_handle);
 }
 
 char term_get_char() {
