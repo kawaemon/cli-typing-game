@@ -1,0 +1,11 @@
+struct {{TYPE}}Vector {
+    {{TYPE_FULL}} *pointer;
+    size_t length;
+    size_t capacity;
+};
+
+struct {{TYPE}}Vector {{TYPE_LOW}}_vector_new(void);
+{{TYPE_FULL}} {{TYPE_LOW}}_vector_get (struct {{TYPE}}Vector *self, size_t index);
+void {{TYPE_LOW}}_vector_push(struct {{TYPE}}Vector *self, {{TYPE_FULL}} value);
+{{TYPE_FULL}} {{TYPE_LOW}}_vector_pop (struct {{TYPE}}Vector *self);
+void {{TYPE_LOW}}_vector_free(struct {{TYPE}}Vector *self);

@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-const size_t INITIAL_CAPACITY = 2;
+#define INITIAL_CAPACITY 2
 
 struct CharVector char_vector_new(void) {
     const struct CharVector result = {
@@ -31,7 +31,9 @@ void char_vector_push(struct CharVector *self, char value) {
     assert(self->pointer != NULL, "passed freed or invalid CharVector");
 
     if (self->capacity == self->length) {
-        self->pointer = realloc(self->pointer, self->capacity * 2);
+        const size_t new_size_bytes = self->capacity * 2 * sizeof(char);
+
+        self->pointer = realloc(self->pointer, new_size_bytes);
         self->capacity *= 2;
     }
 

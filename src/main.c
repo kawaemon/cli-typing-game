@@ -21,10 +21,18 @@ int main(void) {
     }
 
     TERMINAL = get_term();
-    const struct Word *word = random_word();
+
+    struct WordVector words = word_vector_new();
+    for (int i = 0; i < 10; i++) {
+        word_vector_push(&words, random_word());
+    }
 
     while (true) {
-        term_print(&TERMINAL, word->pointer);
+        for (size_t i = 0; i < words.length; i++) {
+            term_print(&TERMINAL, words.pointer[i].pointer);
+            term_print(&TERMINAL, "\n");
+        }
+
         const key = term_get_char();
 
         if (key == ESC_KEY) {
