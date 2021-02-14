@@ -13,6 +13,12 @@
 
 struct Terminal TERMINAL;
 
+struct Game {
+    struct WordVector words;
+    size_t char_index;
+    size_t roma_index;
+};
+
 int main(void) {
     srand((unsigned)time(NULL));
     if (setlocale(LC_CTYPE, "") == NULL) {
@@ -23,29 +29,38 @@ int main(void) {
 
     TERMINAL = get_term();
 
-    struct WordVector words = word_vector_new();
-    for (int i = 0; i < 10; i++) {
-        word_vector_push(&words, random_word());
-    }
+    const struct Game game = {
+        .words = random_words(20),
+        .char_index = 0,
+        .roma_index = 0,
+    };
 
     bool running = true;
-    uint32_t resize_count = 0;
+    char last_key_code = 0;
 
     do {
-        term_print(&TERMINAL, "てすとてすとてすとあーあーあー %d ほげほげふn ",
-                   2, 3);
+        term_print(&TERMINAL, "ESC: 終了 debug: %d\n", last_key_code);
+
+        for (int i = game.words.length - 1; i >= 0; i--) {
+            term_print(&TERMINAL, "%s\n", game.words.pointer[i].pointer);
+        }
+
+        term_set_cursor_pos(&TERMINAL, 0, 1);
 
         const struct TerminalEvent event = term_poll_event(&TERMINAL);
 
         switch (event.type) {
         case KEYBOARD_EVENT:
-            if (event.keyboard_event.key_code == ESC_KEY) {
+            const char keycode = last_key_code = event.keyboard_event.key_code;
+            if (keycode == ESC_KEY) {
                 running = false;
             }
+
+            break;
+
+        case RESIZE_EVENT:
             break;
         }
-
-        printf("polled\n");
 
         term_clear(&TERMINAL);
     } while (running);
