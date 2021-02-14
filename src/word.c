@@ -4,33 +4,33 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// ../scripts/wordsGen.py
-const struct Word WORDS[] = {
-    {.char_count = 3, .pointer = "おかゆ"},
-    {.char_count = 3, .pointer = "つうち"},
-    {.char_count = 2, .pointer = "つめ"},
-    {.char_count = 3, .pointer = "まうす"},
-    {.char_count = 3, .pointer = "かいろ"},
-    {.char_count = 4, .pointer = "のみもの"},
-    {.char_count = 3, .pointer = "どうが"},
-    {.char_count = 4, .pointer = "ねるまえ"},
-    {.char_count = 4, .pointer = "せんさー"},
-    {.char_count = 2, .pointer = "ねこ"},
-    {.char_count = 3, .pointer = "わいん"},
-    {.char_count = 3, .pointer = "こるく"},
-    {.char_count = 5, .pointer = "はむすたー"},
-    {.char_count = 2, .pointer = "かぎ"},
-    {.char_count = 5, .pointer = "こんそーる"},
-    {.char_count = 3, .pointer = "げーむ"},
-    {.char_count = 3, .pointer = "うさぎ"},
-    {.char_count = 4, .pointer = "ろーまじ"},
-    {.char_count = 6, .pointer = "たいむらいん"},
-    {.char_count = 3, .pointer = "せーぶ"},
-    {.char_count = 4, .pointer = "かんすう"},
-    {.char_count = 4, .pointer = "こうせん"},
-};
-
 const struct Word random_word() {
+    // ../scripts/wordsGen.py
+    const struct Word WORDS[] = {
+        {.char_count = 3, .pointer = "おかゆ"},
+        {.char_count = 3, .pointer = "つうち"},
+        {.char_count = 2, .pointer = "つめ"},
+        {.char_count = 3, .pointer = "まうす"},
+        {.char_count = 3, .pointer = "かいろ"},
+        {.char_count = 4, .pointer = "のみもの"},
+        {.char_count = 3, .pointer = "どうが"},
+        {.char_count = 4, .pointer = "ねるまえ"},
+        {.char_count = 4, .pointer = "せんさー"},
+        {.char_count = 2, .pointer = "ねこ"},
+        {.char_count = 3, .pointer = "わいん"},
+        {.char_count = 3, .pointer = "こるく"},
+        {.char_count = 5, .pointer = "はむすたー"},
+        {.char_count = 2, .pointer = "かぎ"},
+        {.char_count = 5, .pointer = "こんそーる"},
+        {.char_count = 3, .pointer = "げーむ"},
+        {.char_count = 3, .pointer = "うさぎ"},
+        {.char_count = 4, .pointer = "ろーまじ"},
+        {.char_count = 6, .pointer = "たいむらいん"},
+        {.char_count = 3, .pointer = "せーぶ"},
+        {.char_count = 4, .pointer = "かんすう"},
+        {.char_count = 4, .pointer = "こうせん"},
+    };
+
     const size_t WORDS_LEN = sizeof(WORDS) / sizeof(WORDS[0]);
     const size_t index = rand() % WORDS_LEN;
     const struct Word word = WORDS[index];
@@ -93,4 +93,14 @@ void word_vector_free(struct WordVector *self) {
 
     free(self->pointer);
     self->pointer = NULL;
+}
+
+const struct WordVector random_words(size_t count) {
+    struct WordVector result = word_vector_new();
+
+    for (size_t i = 0; i < count; i++) {
+        word_vector_push(&result, random_word());
+    }
+
+    return result;
 }

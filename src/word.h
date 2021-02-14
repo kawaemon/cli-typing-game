@@ -6,7 +6,7 @@ struct Word {
     const char *pointer;
 };
 
-const struct Word random_word();
+const struct Word random_word(void);
 
 struct WordVector {
     struct Word *pointer;
@@ -19,3 +19,5 @@ struct Word word_vector_get(struct WordVector *self, size_t index);
 void word_vector_push(struct WordVector *self, struct Word value);
 struct Word word_vector_pop(struct WordVector *self);
 void word_vector_free(struct WordVector *self);
+
+const struct WordVector random_words(size_t count);
