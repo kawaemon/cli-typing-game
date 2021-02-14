@@ -95,6 +95,13 @@ void term_set_bg(struct Terminal *terminal, enum TerminalColor color) {
     SetConsoleTextAttribute(terminal->game_buffer, win_color);
 }
 
+void term_set_cursor_pos(struct Terminal *terminal, size_t x, size_t y) {
+    assert(terminal != NULL, "passed NULL to term_set_cursor_pos(terminal)");
+
+    COORD pos = {x, y};
+    SetConsoleCursorPosition(terminal->game_buffer, pos);
+}
+
 // destroys terminal object
 void term_reset(struct Terminal *terminal) {
     assert(terminal != NULL, "passed NULL to term_reset(terminal)");
