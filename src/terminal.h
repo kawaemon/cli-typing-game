@@ -2,7 +2,7 @@
 #include <Windows.h>
 #include <stdbool.h>
 
-enum TerminalColor { RED, GREEN, WHITE };
+enum TerminalColor { RED, GREEN, WHITE, BLACK };
 
 struct Terminal {
     HANDLE console_handle;

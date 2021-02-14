@@ -54,7 +54,7 @@ void term_set_cursor_visible(struct Terminal *terminal, bool visible) {
 void term_set_fg(struct Terminal *terminal, enum TerminalColor color) {
     assert(terminal != NULL, "passed NULL to term_set_fg(terminal)");
 
-    WORD win_color;
+    WORD win_color = 0;
 
     switch (color) {
     case RED:
@@ -66,6 +66,8 @@ void term_set_fg(struct Terminal *terminal, enum TerminalColor color) {
     case WHITE:
         win_color = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
         break;
+    case BLACK:
+        break;
     default:
         unreachable();
     }
@@ -76,7 +78,7 @@ void term_set_fg(struct Terminal *terminal, enum TerminalColor color) {
 void term_set_bg(struct Terminal *terminal, enum TerminalColor color) {
     assert(terminal != NULL, "passed NULL to term_set_bg(terminal)");
 
-    WORD win_color;
+    WORD win_color = 0;
 
     switch (color) {
     case RED:
@@ -87,6 +89,8 @@ void term_set_bg(struct Terminal *terminal, enum TerminalColor color) {
         break;
     case WHITE:
         win_color = BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE;
+        break;
+    case BLACK:
         break;
     default:
         unreachable();

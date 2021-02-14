@@ -1,5 +1,6 @@
 #include "assert.h"
 #include "char_vector.h"
+#include "roma.h"
 #include "string.h"
 #include "terminal.h"
 #include "word.h"
@@ -19,6 +20,14 @@ struct Game {
     size_t roma_index;
 };
 
+struct Context {
+    bool running;
+    char last_key_code;
+    struct Game game;
+};
+
+void render(struct Context *context);
+
 int main(void) {
     srand((unsigned)time(NULL));
     if (setlocale(LC_CTYPE, "") == NULL) {
@@ -29,31 +38,26 @@ int main(void) {
 
     TERMINAL = get_term();
 
-    const struct Game game = {
-        .words = random_words(20),
-        .char_index = 0,
-        .roma_index = 0,
+    struct Context context = {
+        .running = true,
+        .last_key_code = 0,
+        .game = {
+            .words = random_words(20),
+            .char_index = 0,
+            .roma_index = 0,
+        },
     };
 
-    bool running = true;
-    char last_key_code = 0;
-
     do {
-        term_print(&TERMINAL, "ESC: I—¹ debug: %d\n", last_key_code);
-
-        for (int i = game.words.length - 1; i >= 0; i--) {
-            term_print(&TERMINAL, "%s\n", game.words.pointer[i].pointer);
-        }
-
-        term_set_cursor_pos(&TERMINAL, 0, 1);
-
+        render(&context);
         const struct TerminalEvent event = term_poll_event(&TERMINAL);
 
         switch (event.type) {
         case KEYBOARD_EVENT:
-            const char keycode = last_key_code = event.keyboard_event.key_code;
+            const char keycode = event.keyboard_event.key_code;
+            context.last_key_code = keycode;
             if (keycode == ESC_KEY) {
-                running = false;
+                context.running = false;
             }
 
             break;
@@ -63,8 +67,69 @@ int main(void) {
         }
 
         term_clear(&TERMINAL);
-    } while (running);
+    } while (context.running);
 
     term_reset(&TERMINAL);
     return 0;
+}
+
+void render(struct Context *context) {
+    const struct Word current_word = context->game.words.pointer[0];
+    struct CharVector current_char
+        = string_at(current_word.pointer, context->game.char_index);
+    const struct StringSlice *romas = get_roma(current_char.pointer);
+
+    term_set_fg(&TERMINAL, WHITE);
+    term_set_bg(&TERMINAL, BLACK);
+
+    term_print(&TERMINAL, "ESC: I—¹ debug: %d\n", context->last_key_code);
+    term_print(&TERMINAL, "NEXT: ");
+
+    {
+        assert(romas->length > 0, "romas was empty");
+
+        const char *roma = romas->pointer[0];
+        for (size_t i = 0; roma[i] != '\0'; i++) {
+            if (i < context->game.roma_index) {
+                term_set_fg(&TERMINAL, GREEN);
+            } else if (i == context->game.roma_index) {
+                term_set_fg(&TERMINAL, BLACK);
+                term_set_bg(&TERMINAL, RED);
+            }
+
+            term_print(&TERMINAL, "%c", roma[i]);
+
+            term_set_fg(&TERMINAL, WHITE);
+            term_set_bg(&TERMINAL, BLACK);
+        }
+    }
+
+    term_print(&TERMINAL, "\n");
+
+    {
+        for (size_t i = 0; i < current_word.char_count; i++) {
+            if (i < context->game.roma_index) {
+                term_set_fg(&TERMINAL, GREEN);
+            } else if (i == context->game.roma_index) {
+                term_set_fg(&TERMINAL, BLACK);
+                term_set_bg(&TERMINAL, RED);
+            }
+
+            struct CharVector flagment = string_at(current_word.pointer, i);
+            term_print(&TERMINAL, "%s", flagment.pointer);
+            char_vector_free(&flagment);
+
+            term_set_fg(&TERMINAL, WHITE);
+            term_set_bg(&TERMINAL, BLACK);
+        }
+    }
+
+    term_print(&TERMINAL, "\n");
+
+    for (int i = context->game.words.length - 2; i >= 0; i--) {
+        term_print(&TERMINAL, "%s\n", context->game.words.pointer[i].pointer);
+    }
+
+    term_set_cursor_pos(&TERMINAL, 0, 1);
+    char_vector_free(&current_char);
 }
