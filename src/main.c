@@ -1,6 +1,7 @@
 #include "assert.h"
 #include "terminal.h"
 #include "vector.h"
+#include "word.h"
 #include <locale.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -20,16 +21,10 @@ int main(void) {
     }
 
     TERMINAL = get_term();
-
-    struct CharVector test = char_vector_new();
-    char_vector_pushstr(&test, "‚ ");
-    char_vector_pushstr(&test, "‚¢");
-    char_vector_pushstr(&test, "‚©");
-    char_vector_pushstr(&test, "‚¨");
-    char_vector_pushstr(&test, "‚Ö");
+    const struct Word *word = random_word();
 
     while (true) {
-        printf("%s", test.pointer);
+        term_print(&TERMINAL, word->pointer);
         const key = term_get_char();
 
         if (key == ESC_KEY) {
