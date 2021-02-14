@@ -10,7 +10,8 @@ struct CharVector char_vector_new(void) {
     const struct CharVector result = {
         .pointer = malloc(sizeof(char) * INITIAL_CAPACITY),
         .length = 0,
-        .capacity = INITIAL_CAPACITY};
+        .capacity = INITIAL_CAPACITY,
+    };
 
     assert(result.pointer != NULL, "allocation failed");
 

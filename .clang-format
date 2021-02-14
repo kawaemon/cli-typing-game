@@ -1,2 +1,5 @@
 BasedOnStyle: LLVM
 IndentWidth: 4
+AllowShortBlocksOnASingleLine: Empty
+AllowShortFunctionsOnASingleLine: Empty
+BreakBeforeBinaryOperators: All

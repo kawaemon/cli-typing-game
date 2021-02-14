@@ -5,10 +5,10 @@
 
 extern struct Terminal TERMINAL;
 
-void failure_hook(int line, const char *msg, ...) {
+void failure_hook(const char *filename, int line, const char *msg, ...) {
     term_reset(&TERMINAL);
 
-    printf("at line %d: ", line);
+    printf("at %s line %d: ", filename, line);
 
     va_list args;
     va_start(args, msg);

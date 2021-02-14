@@ -44,7 +44,8 @@ struct WordVector word_vector_new(void) {
     const struct WordVector result = {
         .pointer = malloc(sizeof(struct Word) * INITIAL_CAPACITY),
         .length = 0,
-        .capacity = INITIAL_CAPACITY};
+        .capacity = INITIAL_CAPACITY,
+    };
 
     assert(result.pointer != NULL, "allocation failed");
 

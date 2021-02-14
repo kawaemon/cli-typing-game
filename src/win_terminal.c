@@ -1,10 +1,13 @@
-#include "terminal.h"
+#include <conio.h>
+#include <stdio.h>
+
 #include "assert.h"
 #include "string.h"
-#include <conio.h>
+#include "terminal.h"
 
 struct Terminal get_term() {
     HANDLE console_handle = GetStdHandle(STD_OUTPUT_HANDLE);
+    HANDLE stdin_handle = GetStdHandle(STD_INPUT_HANDLE);
 
     CONSOLE_SCREEN_BUFFER_INFO buffer_info;
     GetConsoleScreenBufferInfo(console_handle, &buffer_info);
@@ -18,17 +21,18 @@ struct Terminal get_term() {
 
     SetConsoleActiveScreenBuffer(game_buffer);
 
-    struct Terminal result = {.console_handle = console_handle,
-                              .game_buffer = game_buffer,
-                              .origin_buffer_info = buffer_info,
-                              .origin_cursor_info = cursor_info};
-
-    return result;
+    return (struct Terminal){
+        .console_handle = console_handle,
+        .stdin_handle = stdin_handle,
+        .game_buffer = game_buffer,
+        .origin_buffer_info = buffer_info,
+        .origin_cursor_info = cursor_info,
+    };
 }
 
 void term_clear(struct Terminal *terminal) {
-    DWORD size = terminal->origin_buffer_info.dwSize.X *
-                 terminal->origin_buffer_info.dwSize.Y;
+    DWORD size = terminal->origin_buffer_info.dwSize.X
+                 * terminal->origin_buffer_info.dwSize.Y;
     COORD pos = {0, 0};
     DWORD written;
     FillConsoleOutputCharacter(terminal->game_buffer, ' ', size, pos, &written);
@@ -102,8 +106,44 @@ void term_reset(struct Terminal *terminal) {
     CloseHandle(terminal->game_buffer);
 }
 
-char term_get_char() { return _getch(); }
+char term_get_char() {
+    return _getch();
+}
 
 void term_print(struct Terminal *terminal, const char *text) {
     WriteConsole(terminal->game_buffer, text, string_bytes(text), NULL, NULL);
+}
+
+struct TerminalEvent term_poll_event(struct Terminal *terminal) {
+    INPUT_RECORD buffer[1];
+    DWORD read;
+
+    if (!ReadConsoleInput(terminal->stdin_handle, buffer, 1, &read)) {
+        failure("failed to read console input: %d", GetLastError());
+    }
+
+    if (read == 0) {
+        failure("failed to poll event");
+    }
+
+    const INPUT_RECORD event = buffer[0];
+
+    switch (event.EventType) {
+    case KEY_EVENT:
+        return (struct TerminalEvent) {
+            .type = KEYBOARD_EVENT,
+            .keyboard_event = {
+                .key_code = event.Event.KeyEvent.uChar.AsciiChar,
+            },
+        };
+
+    case WINDOW_BUFFER_SIZE_EVENT:
+        return (struct TerminalEvent){
+            .type = RESIZE_EVENT,
+        };
+
+    default:
+        // ignore other events and repoll
+        return term_poll_event(terminal);
+    }
 }

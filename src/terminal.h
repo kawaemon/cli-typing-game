@@ -6,9 +6,21 @@ enum TerminalColor { RED, GREEN, WHITE };
 
 struct Terminal {
     HANDLE console_handle;
+    HANDLE stdin_handle;
     HANDLE game_buffer;
     CONSOLE_SCREEN_BUFFER_INFO origin_buffer_info;
     CONSOLE_CURSOR_INFO origin_cursor_info;
+};
+
+enum TerminalEventType { KEYBOARD_EVENT, RESIZE_EVENT };
+
+struct TerminalKeyboardEvent {
+    char key_code;
+};
+
+struct TerminalEvent {
+    enum TerminalEventType type;
+    struct TerminalKeyboardEvent keyboard_event;
 };
 
 struct Terminal get_term(void);
@@ -19,3 +31,4 @@ void set_term_bg(struct Terminal *terminal, enum TerminalColor color);
 void term_reset(struct Terminal *terminal);
 char term_get_char(void);
 void term_print(struct Terminal *terminal, const char *text);
+struct TerminalEvent term_poll_event(struct Terminal *terminal);

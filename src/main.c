@@ -33,9 +33,10 @@ int main(void) {
             term_print(&TERMINAL, "\n");
         }
 
-        const key = term_get_char();
+        const struct TerminalEvent event = term_poll_event(&TERMINAL);
 
-        if (key == ESC_KEY) {
+        if (event.type == KEYBOARD_EVENT
+            && event.keyboard_event.key_code == ESC_KEY) {
             break;
         }
 
