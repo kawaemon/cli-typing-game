@@ -1,8 +1,10 @@
 #include "string.h"
 #include "assert.h"
 #include "char_vector.h"
+#include <stdarg.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 uint32_t string_len(const char *text) {
@@ -83,4 +85,18 @@ bool string_eq(const char *a, const char *b) {
             return true;
         }
     }
+}
+
+struct CharVector format(const char *format, ...) {
+    va_list args;
+    va_start(args, format);
+
+    // + 1 for \0
+    const size_t need_bytes = vsnprintf(NULL, 0, format, args) + 1;
+
+    struct CharVector result = char_vector_new();
+    char_vector_reserve(&result, need_bytes);
+
+    vsnprintf(result.pointer, need_bytes, format, args);
+    return result;
 }

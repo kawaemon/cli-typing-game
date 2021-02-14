@@ -12,3 +12,4 @@ void char_vector_push(struct CharVector *self, char value);
 void char_vector_pushstr(struct CharVector *self, const char *str);
 char char_vector_pop(struct CharVector *self);
 void char_vector_free(struct CharVector *self);
+void char_vector_reserve(struct CharVector *self, size_t size);

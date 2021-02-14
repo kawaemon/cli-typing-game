@@ -73,3 +73,14 @@ void char_vector_free(struct CharVector *self) {
     free(self->pointer);
     self->pointer = NULL;
 }
+
+// size is number of additional elements, not bytes.
+void char_vector_reserve(struct CharVector *self, size_t size) {
+    if (self->capacity - self->length < size) {
+        const size_t new_capacity = self->capacity + size;
+        const size_t new_size = new_capacity * sizeof(char);
+
+        self->pointer = realloc(self->pointer, new_size);
+        self->capacity = new_capacity;
+    }
+}
