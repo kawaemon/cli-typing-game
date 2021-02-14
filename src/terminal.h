@@ -30,5 +30,5 @@ void set_term_fg(struct Terminal *terminal, enum TerminalColor color);
 void set_term_bg(struct Terminal *terminal, enum TerminalColor color);
 void term_reset(struct Terminal *terminal);
 char term_get_char(void);
-void term_print(struct Terminal *terminal, const char *text);
+void term_print(struct Terminal *terminal, const char *format, ...);
 struct TerminalEvent term_poll_event(struct Terminal *terminal);

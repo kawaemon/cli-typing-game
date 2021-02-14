@@ -1,4 +1,5 @@
 #include <conio.h>
+#include <stdarg.h>
 #include <stdio.h>
 
 #include "assert.h"
@@ -110,8 +111,19 @@ char term_get_char() {
     return _getch();
 }
 
-void term_print(struct Terminal *terminal, const char *text) {
-    WriteConsole(terminal->game_buffer, text, string_bytes(text), NULL, NULL);
+void term_print(struct Terminal *terminal, const char *format, ...) {
+    va_list args;
+
+    va_start(args, format);
+    struct CharVector text = vformat(format, args);
+    va_end(args);
+
+    if (!WriteConsole(terminal->game_buffer, text.pointer, text.length, NULL,
+                      NULL)) {
+        failure("failed to write to console: %d", GetLastError());
+    }
+
+    char_vector_free(&text);
 }
 
 struct TerminalEvent term_poll_event(struct Terminal *terminal) {

@@ -21,10 +21,6 @@ int main(void) {
         return 1;
     }
 
-    printf("%s\n",
-           format("てすとてすとあーあーあー %d あいうえお %d", 2, 3).pointer);
-    return 0;
-
     TERMINAL = get_term();
 
     struct WordVector words = word_vector_new();
@@ -36,10 +32,8 @@ int main(void) {
     uint32_t resize_count = 0;
 
     do {
-        for (size_t i = 0; i < words.length; i++) {
-            // term_print(&TERMINAL, );
-            term_print(&TERMINAL, "\n");
-        }
+        term_print(&TERMINAL, "てすとてすとてすとあーあーあー %d ほげほげふn ",
+                   2, 3);
 
         const struct TerminalEvent event = term_poll_event(&TERMINAL);
 
@@ -50,6 +44,8 @@ int main(void) {
             }
             break;
         }
+
+        printf("polled\n");
 
         term_clear(&TERMINAL);
     } while (running);
