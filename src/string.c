@@ -94,7 +94,10 @@ struct CharVector vformat(const char *format, va_list args) {
     struct CharVector result = char_vector_new();
     char_vector_reserve(&result, need_bytes);
 
-    vsnprintf(result.pointer, need_bytes, format, args);
+    // we need to overwrite length manually because vsnprintf writes to memory
+    // directly.
+    result.length = vsnprintf(result.pointer, need_bytes, format, args);
+
     return result;
 }
 
