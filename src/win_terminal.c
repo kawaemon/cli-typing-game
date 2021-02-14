@@ -1,5 +1,6 @@
 #include "terminal.h"
 #include "assert.h"
+#include "string.h"
 #include <conio.h>
 
 struct Terminal get_term() {
@@ -102,3 +103,7 @@ void term_reset(struct Terminal *terminal) {
 }
 
 char term_get_char() { return _getch(); }
+
+void term_print(struct Terminal *terminal, const char *text) {
+    WriteConsole(terminal->game_buffer, text, string_bytes(text), NULL, NULL);
+}
