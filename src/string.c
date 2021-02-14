@@ -87,10 +87,7 @@ bool string_eq(const char *a, const char *b) {
     }
 }
 
-struct CharVector format(const char *format, ...) {
-    va_list args;
-    va_start(args, format);
-
+struct CharVector vformat(const char *format, va_list args) {
     // + 1 for \0
     const size_t need_bytes = vsnprintf(NULL, 0, format, args) + 1;
 
@@ -98,5 +95,15 @@ struct CharVector format(const char *format, ...) {
     char_vector_reserve(&result, need_bytes);
 
     vsnprintf(result.pointer, need_bytes, format, args);
+    return result;
+}
+
+struct CharVector format(const char *format, ...) {
+    va_list args;
+    va_start(args, format);
+
+    const struct CharVector result = vformat(format, args);
+    va_end(args);
+
     return result;
 }
