@@ -43,6 +43,9 @@ void term_clear(struct Terminal *terminal) {
     COORD pos = {0, 0};
     DWORD written;
     FillConsoleOutputCharacter(terminal->game_buffer, ' ', size, pos, &written);
+    FillConsoleOutputAttribute(terminal->game_buffer,
+                               terminal->current_text_attributes, size, pos,
+                               &written);
     SetConsoleCursorPosition(terminal->game_buffer, pos);
 }
 
