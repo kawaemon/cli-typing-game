@@ -18,14 +18,14 @@ struct Game {
     struct WordVector words;
     size_t char_index;
     size_t roma_index;
-    bool previous_collect;
+    bool previous_correct;
 };
 
 struct GameResult {
     clock_t started_on;
     clock_t ended_on;
-    uint64_t total_types;
-    double miss_types;
+    int total_types;
+    int miss_types;
 };
 
 struct Context {
@@ -60,7 +60,7 @@ int main(void) {
             .words = random_words(20),
             .char_index = 0,
             .roma_index = 0,
-            .previous_collect = true,
+            .previous_correct = true,
         },
         .result = { 0 },
     };
@@ -108,6 +108,7 @@ void game_render(struct Context *context) {
         // ゲーム終わり
         context->gaming = false;
         context->result.ended_on = clock();
+        result_render(context);
         return;
     }
 
@@ -123,7 +124,7 @@ void game_render(struct Context *context) {
     term_print(&TERMINAL, "ESC: 終了 debug: %d %d %d %s\n",
                context->last_key_code, context->result.total_types,
                context->result.miss_types,
-               context->game.previous_collect ? "true" : "false");
+               context->game.previous_correct ? "true" : "false");
     term_print(&TERMINAL, "NEXT: ");
 
     {
@@ -222,8 +223,6 @@ void game_on_key_type(struct Context *context, char input) {
     if (!is_correct) {
         context->result.miss_types += 1;
     }
-
-    context->game.previous_collect = is_correct;
 }
 
 void result_render(struct Context *context) {
@@ -236,11 +235,18 @@ void result_render(struct Context *context) {
 
     term_print(&TERMINAL, "ゲーム結果\n");
     term_print(&TERMINAL, "かかった時間(秒): %02.02f\n", gameDurationSec);
-    term_print(&TERMINAL, "総キータイプ数: %d\n", result.total_types);
-    term_print(&TERMINAL, "ミスタイプ数: %d\n", result.miss_types);
+    term_print(&TERMINAL, "総キータイプ数: %u\n", result.total_types);
+    term_print(&TERMINAL, "ミスタイプ数: %u\n", result.miss_types);
     term_print(&TERMINAL, "秒間キータイプ数: %02.02f\n", keys_per_sec);
 }
 
 void result_on_key_type(struct Context *context, char input) {
-    // todo
+    if (input == 32) {
+        // space
+        context->result = (struct GameResult){0};
+        context->game.char_index = 0;
+        context->game.roma_index = 0;
+        context->game.words = random_words(20);
+        context->gaming = true;
+    }
 }
