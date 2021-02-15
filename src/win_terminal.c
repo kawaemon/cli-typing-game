@@ -168,6 +168,10 @@ struct TerminalEvent term_poll_event(struct Terminal *terminal) {
 
     switch (event.EventType) {
     case KEY_EVENT:
+        if (!event.Event.KeyEvent.bKeyDown) {
+            return term_poll_event(terminal);
+        }
+
         return (struct TerminalEvent) {
             .type = KEYBOARD_EVENT,
             .keyboard_event = {
