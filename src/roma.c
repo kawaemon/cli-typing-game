@@ -12,6 +12,8 @@
 const struct StringSlice *get_roma(const char *hiragana) {
     assert(hiragana != NULL, "passed NULL to get_roma(hiragana)");
 
+    // 入力されたひらがなに対して対応するローマ字の一覧を返却する。
+    // 同じようなコードが並ぶため、マクロを使って省略する。
     __GET_ROMA_IMPL("あ", 1, "a")
     __GET_ROMA_IMPL("い", 1, "i")
     __GET_ROMA_IMPL("う", 1, "u")

@@ -4,7 +4,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// ランダムな単語を返す関数
 const struct Word random_word() {
+    // 単語一覧
     // ../scripts/wordsGen.py
     const struct Word WORDS[] = {
         {.char_count = 3, .pointer = "おかゆ"},
@@ -31,15 +33,21 @@ const struct Word random_word() {
         {.char_count = 4, .pointer = "こうせん"},
     };
 
+    // 単語リストの要素数
     const size_t WORDS_LEN = sizeof(WORDS) / sizeof(WORDS[0]);
+
+    // ランダムな場所を選び返却する
     const size_t index = rand() % WORDS_LEN;
     const struct Word word = WORDS[index];
 
     return word;
 }
 
+// CharVectorとほぼ同じなので、詳しい説明は省略します。
+
 #define INITIAL_CAPACITY 2
 
+// 新しい WordVector を作成する関数
 struct WordVector word_vector_new(void) {
     const struct WordVector result = {
         .pointer = malloc(sizeof(struct Word) * INITIAL_CAPACITY),
@@ -52,6 +60,7 @@ struct WordVector word_vector_new(void) {
     return result;
 }
 
+// self の index 番目の要素を取得する関数
 struct Word word_vector_get(struct WordVector *self, size_t index) {
     assert(
         index < self->length,
@@ -61,6 +70,7 @@ struct Word word_vector_get(struct WordVector *self, size_t index) {
     return self->pointer[index];
 }
 
+// self の最後に value を追加する関数
 void word_vector_push(struct WordVector *self, struct Word value) {
     assert(self != NULL, "passed NULL to word_vector_push");
     assert(self->pointer != NULL, "passed freed or invalid WordVector");
@@ -76,6 +86,7 @@ void word_vector_push(struct WordVector *self, struct Word value) {
     self->length += 1;
 }
 
+// self の最後の要素を消去する関数
 struct Word word_vector_pop(struct WordVector *self) {
     assert(self != NULL, "passed NULL to word_vector_push(self)");
     assert(self->pointer != NULL, "passed freed or invalid WordVector");
@@ -87,6 +98,7 @@ struct Word word_vector_pop(struct WordVector *self) {
     return result;
 }
 
+// self を開放する関数
 void word_vector_free(struct WordVector *self) {
     assert(self != NULL, "passed NULL to word_vector_push");
     assert(self->pointer != NULL, "passed freed or invalid WordVector");
@@ -95,6 +107,7 @@ void word_vector_free(struct WordVector *self) {
     self->pointer = NULL;
 }
 
+// self に新たにsize領域確保する関数
 const struct WordVector random_words(size_t count) {
     struct WordVector result = word_vector_new();
 

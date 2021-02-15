@@ -6,6 +6,7 @@
 #include "string.h"
 #include "terminal.h"
 
+// Terminal 構造体を取得する関数
 struct Terminal get_term() {
     HANDLE console_handle = GetStdHandle(STD_OUTPUT_HANDLE);
     HANDLE stdin_handle = GetStdHandle(STD_INPUT_HANDLE);
@@ -37,6 +38,7 @@ struct Terminal get_term() {
     };
 }
 
+// ターミナルを空白にする関数
 void term_clear(struct Terminal *terminal) {
     DWORD size = terminal->origin_buffer_info.dwSize.X
                  * terminal->origin_buffer_info.dwSize.Y;
@@ -49,6 +51,7 @@ void term_clear(struct Terminal *terminal) {
     SetConsoleCursorPosition(terminal->game_buffer, pos);
 }
 
+// カーソルの可視状態を設定する関数
 void term_set_cursor_visible(struct Terminal *terminal, bool visible) {
     assert(terminal != NULL,
            "passed NULL to term_set_cursor_visible(terminal)");
@@ -60,6 +63,7 @@ void term_set_cursor_visible(struct Terminal *terminal, bool visible) {
     SetConsoleCursorInfo(terminal->game_buffer, &info);
 }
 
+// ターミナルの前景色を設定する関数
 void term_set_fg(struct Terminal *terminal, enum TerminalColor color) {
     assert(terminal != NULL, "passed NULL to term_set_fg(terminal)");
 
@@ -86,6 +90,7 @@ void term_set_fg(struct Terminal *terminal, enum TerminalColor color) {
     SetConsoleTextAttribute(terminal->game_buffer, win_color);
 }
 
+// ターミナルの背景色を設定する関数
 void term_set_bg(struct Terminal *terminal, enum TerminalColor color) {
     assert(terminal != NULL, "passed NULL to term_set_bg(terminal)");
 
@@ -112,6 +117,7 @@ void term_set_bg(struct Terminal *terminal, enum TerminalColor color) {
     SetConsoleTextAttribute(terminal->game_buffer, win_color);
 }
 
+// カーソルの場所を設定する関数
 void term_set_cursor_pos(struct Terminal *terminal, size_t x, size_t y) {
     assert(terminal != NULL, "passed NULL to term_set_cursor_pos(terminal)");
 
@@ -119,7 +125,7 @@ void term_set_cursor_pos(struct Terminal *terminal, size_t x, size_t y) {
     SetConsoleCursorPosition(terminal->game_buffer, pos);
 }
 
-// destroys terminal object
+// Terminal 構造体を破壊して元の状態に戻す関数
 void term_reset(struct Terminal *terminal) {
     assert(terminal != NULL, "passed NULL to term_reset(terminal)");
 
@@ -133,10 +139,12 @@ void term_reset(struct Terminal *terminal) {
     CloseHandle(terminal->console_handle);
 }
 
+// ターミナルから1文字入力を取得する関数。term_poll_eventに置き換えられたため使われていない。
 char term_get_char() {
     return _getch();
 }
 
+// ターミナルに文字を表示する関数。printfに非常に似ている。
 void term_print(struct Terminal *terminal, const char *format, ...) {
     va_list args;
 
@@ -152,6 +160,7 @@ void term_print(struct Terminal *terminal, const char *format, ...) {
     char_vector_free(&text);
 }
 
+// ターミナルから1イベント取得する関数。
 struct TerminalEvent term_poll_event(struct Terminal *terminal) {
     INPUT_RECORD buffer[1];
     DWORD read;
