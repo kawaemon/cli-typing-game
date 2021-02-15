@@ -57,7 +57,7 @@ struct CharVector string_at(const char *src, size_t target_pos) {
             struct CharVector output = char_vector_new();
 
             for (size_t i = 0; i < (size_t)len; i++) {
-                char_vector_push(&output, src[index + 1]);
+                char_vector_push(&output, src[index + i]);
             }
 
             char_vector_push(&output, '\0');
