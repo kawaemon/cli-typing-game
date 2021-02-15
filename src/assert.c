@@ -14,4 +14,6 @@ void failure_hook(const char *filename, int line, const char *msg, ...) {
     va_start(args, msg);
     vprintf(msg, args);
     va_end(args);
+
+    exit(1);
 }

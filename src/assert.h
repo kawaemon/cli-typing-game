@@ -1,9 +1,7 @@
 #pragma once
 #include <stdlib.h>
 
-#define failure(msg, ...)                                                      \
-    failure_hook(__FILE__, __LINE__, msg, __VA_ARGS__);                        \
-    exit(1);
+#define failure(msg, ...) failure_hook(__FILE__, __LINE__, msg, __VA_ARGS__);
 
 #define unreachable() failure("expected to be unreachable code executed");
 
