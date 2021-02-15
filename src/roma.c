@@ -4,8 +4,8 @@
 #define __GET_ROMA_IMPL(HIRAGANA, ROMAS_LEN, ...)                              \
     if (string_eq(hiragana, HIRAGANA)) {                                       \
         const static char *romas[] = {__VA_ARGS__};                            \
-        const static struct StringSlice data = {.length = ROMAS_LEN,           \
-                                                .pointer = romas};             \
+        const static struct StringSlice data                                   \
+            = {.length = ROMAS_LEN, .pointer = romas};                         \
         return &data;                                                          \
     }
 
@@ -83,6 +83,7 @@ const struct StringSlice *get_roma(const char *hiragana) {
     __GET_ROMA_IMPL("ÇÌ", 1, "wa")
     __GET_ROMA_IMPL("Ç", 1, "wo")
     __GET_ROMA_IMPL("ÇÒ", 1, "nn")
+    __GET_ROMA_IMPL("Å[", 1, "-")
 
-    failure("couldn't find such character in get_roma", hiragana);
+    failure("couldn't find such character in get_roma: %s", hiragana);
 }
