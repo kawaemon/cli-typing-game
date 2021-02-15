@@ -10,6 +10,7 @@ struct Terminal {
     HANDLE game_buffer;
     CONSOLE_SCREEN_BUFFER_INFO origin_buffer_info;
     CONSOLE_CURSOR_INFO origin_cursor_info;
+    WORD current_text_attributes;
 };
 
 enum TerminalEventType { KEYBOARD_EVENT, RESIZE_EVENT };

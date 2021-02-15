@@ -22,12 +22,18 @@ struct Terminal get_term() {
 
     SetConsoleActiveScreenBuffer(game_buffer);
 
+    const WORD text_attributes
+        = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
+
+    SetConsoleTextAttribute(game_buffer, text_attributes);
+
     return (struct Terminal){
         .console_handle = console_handle,
         .stdin_handle = stdin_handle,
         .game_buffer = game_buffer,
         .origin_buffer_info = buffer_info,
         .origin_cursor_info = cursor_info,
+        .current_text_attributes = text_attributes,
     };
 }
 
@@ -54,23 +60,25 @@ void term_set_cursor_visible(struct Terminal *terminal, bool visible) {
 void term_set_fg(struct Terminal *terminal, enum TerminalColor color) {
     assert(terminal != NULL, "passed NULL to term_set_fg(terminal)");
 
-    WORD win_color = 0;
+    WORD win_color = terminal->current_text_attributes & 0b11111000;
 
     switch (color) {
     case RED:
-        win_color = FOREGROUND_RED;
+        win_color |= FOREGROUND_RED;
         break;
     case GREEN:
-        win_color = FOREGROUND_GREEN;
+        win_color |= FOREGROUND_GREEN;
         break;
     case WHITE:
-        win_color = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
+        win_color |= FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
         break;
     case BLACK:
         break;
     default:
         unreachable();
     }
+
+    terminal->current_text_attributes = win_color;
 
     SetConsoleTextAttribute(terminal->game_buffer, win_color);
 }
@@ -78,23 +86,25 @@ void term_set_fg(struct Terminal *terminal, enum TerminalColor color) {
 void term_set_bg(struct Terminal *terminal, enum TerminalColor color) {
     assert(terminal != NULL, "passed NULL to term_set_bg(terminal)");
 
-    WORD win_color = 0;
+    WORD win_color = terminal->current_text_attributes & 0b10001111;
 
     switch (color) {
     case RED:
-        win_color = BACKGROUND_RED;
+        win_color |= BACKGROUND_RED;
         break;
     case GREEN:
-        win_color = BACKGROUND_GREEN;
+        win_color |= BACKGROUND_GREEN;
         break;
     case WHITE:
-        win_color = BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE;
+        win_color |= BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE;
         break;
     case BLACK:
         break;
     default:
         unreachable();
     }
+
+    terminal->current_text_attributes = win_color;
 
     SetConsoleTextAttribute(terminal->game_buffer, win_color);
 }
