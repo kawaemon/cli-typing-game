@@ -1,49 +1,49 @@
 #include <stdlib.h>
 
-// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’è¡¨ç¤ºã—ã¦ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚’å³çµ‚äº†ã™ã‚‹ã€€
+// ƒƒbƒZ[ƒW‚ğ•\¦‚µ‚ÄƒvƒƒOƒ‰ƒ€‚ğ‘¦I—¹‚·‚é@
 #define failure(msg, ...) failure_hook(__FILE__, __LINE__, msg, __VA_ARGS__);
 
-// ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã®ã“ã“ã«ã¯çµ¶å¯¾ã«åˆ°é”ã—ãªã„ã“ã¨ã‚’æ˜ç¤ºã™ã‚‹
+// ƒvƒƒOƒ‰ƒ€‚Ì‚±‚±‚É‚Íâ‘Î‚É“’B‚µ‚È‚¢‚±‚Æ‚ğ–¾¦‚·‚é
 #define unreachable() failure("expected to be unreachable code executed");
 
-// condition ãŒ false ã ã£ãŸæ™‚ã«ã€ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’è¡¨ç¤ºã—ã¦ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚’å³çµ‚äº†ã™ã‚‹
+// condition ‚ª false ‚¾‚Á‚½‚ÉAƒƒbƒZ[ƒW‚ğ•\¦‚µ‚ÄƒvƒƒOƒ‰ƒ€‚ğ‘¦I—¹‚·‚é
 #define assert(condition, msg, ...)                                            \
     if (!(condition)) {                                                        \
         failure(msg, __VA_ARGS__);                                             \
     }
 
-// çµ‚äº†ã™ã‚‹ã¨ãã«å‘¼ã°ã‚Œã‚‹é–¢æ•°ã®ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—å®£è¨€
+// I—¹‚·‚é‚Æ‚«‚ÉŒÄ‚Î‚ê‚éŠÖ”‚Ìƒvƒƒgƒ^ƒCƒvéŒ¾
 void failure_hook(const char *filename, int line, const char *msg, ...);
 
-// åç¸®å¯èƒ½ãª char ã®é…åˆ—
+// ûk‰Â”\‚È char ‚Ì”z—ñ
 struct CharVector {
-    // ãƒ¡ãƒ¢ãƒªé ˜åŸŸã¸ã®ãƒã‚¤ãƒ³ã‚¿
+    // ƒƒ‚ƒŠ—Ìˆæ‚Ö‚Ìƒ|ƒCƒ“ƒ^
     char *pointer;
-    // ç¾åœ¨ã®é…åˆ—ã®é•·ã•
+    // Œ»İ‚Ì”z—ñ‚Ì’·‚³
     size_t length;
-    // ç¾åœ¨ç¢ºä¿ã•ã‚Œã¦ã„ã‚‹ãƒ¡ãƒ¢ãƒªé ˜åŸŸã®å®¹é‡
+    // Œ»İŠm•Û‚³‚ê‚Ä‚¢‚éƒƒ‚ƒŠ—Ìˆæ‚Ì—e—Ê
     size_t capacity;
 };
 
-// æ–°ã—ã„ CharVector ã‚’ä½œæˆã™ã‚‹é–¢æ•°
+// V‚µ‚¢ CharVector ‚ğì¬‚·‚éŠÖ”
 struct CharVector char_vector_new(void);
 
-// self ã® index ç•ªç›®ã®è¦ç´ ã‚’å–å¾—ã™ã‚‹é–¢æ•°
+// self ‚Ì index ”Ô–Ú‚Ì—v‘f‚ğæ“¾‚·‚éŠÖ”
 char char_vector_get(struct CharVector *self, size_t index);
 
-// self ã®æœ€å¾Œã« value ã‚’è¿½åŠ ã™ã‚‹é–¢æ•°
+// self ‚ÌÅŒã‚É value ‚ğ’Ç‰Á‚·‚éŠÖ”
 void char_vector_push(struct CharVector *self, char value);
 
-// self ã®æœ€å¾Œã« str ã‚’è¿½åŠ ã™ã‚‹é–¢æ•°
+// self ‚ÌÅŒã‚É str ‚ğ’Ç‰Á‚·‚éŠÖ”
 void char_vector_pushstr(struct CharVector *self, const char *str);
 
-// self ã®æœ€å¾Œã®è¦ç´ ã‚’æ¶ˆå»ã™ã‚‹é–¢æ•°
+// self ‚ÌÅŒã‚Ì—v‘f‚ğÁ‹‚·‚éŠÖ”
 char char_vector_pop(struct CharVector *self);
 
-// self ã‚’é–‹æ”¾ã™ã‚‹é–¢æ•°
+// self ‚ğŠJ•ú‚·‚éŠÖ”
 void char_vector_free(struct CharVector *self);
 
-// self ã«æ–°ãŸã«sizeé ˜åŸŸç¢ºä¿ã™ã‚‹é–¢æ•°
+// self ‚ÉV‚½‚Ésize—ÌˆæŠm•Û‚·‚éŠÖ”
 void char_vector_reserve(struct CharVector *self, size_t size);
 
 #include <stdbool.h>
@@ -54,23 +54,23 @@ struct String {
     size_t char_count;
 };
 
-// text ã®æ–‡å­—æ•°ã‚’è¿”ã™é–¢æ•°
+// text ‚Ì•¶š”‚ğ•Ô‚·ŠÖ”
 uint32_t string_len(const char *text);
 
-// text ã®ãƒã‚¤ãƒˆæ•°ã‚’è¿”ã™é–¢æ•°
+// text ‚ÌƒoƒCƒg”‚ğ•Ô‚·ŠÖ”
 size_t string_bytes(const char *text);
 
-// src ã® target_pos æ–‡å­—ç›®ã‚’è¿”ã™é–¢æ•°ã€‚ãƒãƒ«ãƒãƒã‚¤ãƒˆæ–‡å­—ï¼ˆæ—¥æœ¬èªãªã©ï¼‰å¯¾å¿œã€‚
+// src ‚Ì target_pos •¶š–Ú‚ğ•Ô‚·ŠÖ”Bƒ}ƒ‹ƒ`ƒoƒCƒg•¶ši“ú–{Œê‚È‚Çj‘Î‰B
 struct CharVector string_at(const char *src, size_t pos);
 
-// a ã¨ b ãŒç­‰ã—ã„ã‹ã‚’åˆ¤å®šã™ã‚‹é–¢æ•°
+// a ‚Æ b ‚ª“™‚µ‚¢‚©‚ğ”»’è‚·‚éŠÖ”
 bool string_eq(const char *a, const char *b);
 
-// printfé–¢æ•°ãŒæ¨™æº–å‡ºåŠ›ã«å¯¾ã—ã¦çµæœã‚’æ›¸ãè¾¼ã‚€ã®ã«å¯¾ã—ã€
-// ã“ã®é–¢æ•°ã¯ãƒ¡ãƒ¢ãƒªä¸Šã«æ›¸ãè¾¼ã¿ã€ãã®ãƒ¡ãƒ¢ãƒªé ˜åŸŸã‚’è¿”ã™é–¢æ•°ã€‚
+// printfŠÖ”‚ª•W€o—Í‚É‘Î‚µ‚ÄŒ‹‰Ê‚ğ‘‚«‚Ş‚Ì‚É‘Î‚µA
+// ‚±‚ÌŠÖ”‚Íƒƒ‚ƒŠã‚É‘‚«‚İA‚»‚Ìƒƒ‚ƒŠ—Ìˆæ‚ğ•Ô‚·ŠÖ”B
 struct CharVector format(const char *format, ...);
 
-// formaté–¢æ•°ã®va_listç‰ˆ
+// formatŠÖ”‚Ìva_list”Å
 struct CharVector vformat(const char *format, va_list args);
 
 struct StringSlice {
@@ -83,10 +83,10 @@ const struct StringSlice *get_roma(const char *hiragana);
 #include <Windows.h>
 #include <stdbool.h>
 
-// èƒŒæ™¯è‰²ç­‰ã®æŒ‡å®šã«ä½¿ã†è‰²ã®åˆ—æŒ™å‹
+// ”wŒiF“™‚Ìw’è‚Ég‚¤F‚Ì—ñ‹“Œ^
 enum TerminalColor { RED, GREEN, WHITE, BLACK };
 
-// ã‚¿ãƒ¼ãƒŸãƒŠãƒ«ã®åˆ¶å¾¡ã«ä½¿ã†æƒ…å ±ã‚’ã¾ã¨ã‚ã‚‹æ§‹é€ ä½“
+// ƒ^[ƒ~ƒiƒ‹‚Ì§Œä‚Ég‚¤î•ñ‚ğ‚Ü‚Æ‚ß‚é\‘¢‘Ì
 struct Terminal {
     HANDLE console_handle;
     HANDLE stdin_handle;
@@ -96,93 +96,93 @@ struct Terminal {
     WORD current_text_attributes;
 };
 
-// ã‚¿ãƒ¼ãƒŸãƒŠãƒ«ã§ç™ºç”Ÿã™ã‚‹ã‚¤ãƒ™ãƒ³ãƒˆã®ç¨®é¡ã®åˆ—æŒ™å‹
+// ƒ^[ƒ~ƒiƒ‹‚Å”­¶‚·‚éƒCƒxƒ“ƒg‚Ìí—Ş‚Ì—ñ‹“Œ^
 enum TerminalEventType { KEYBOARD_EVENT, RESIZE_EVENT };
 
-// ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ã‚¤ãƒ™ãƒ³ãƒˆ
+// ƒL[ƒ{[ƒhƒCƒxƒ“ƒg
 struct TerminalKeyboardEvent {
-    // æŠ¼ã•ã‚ŒãŸã‚­ãƒ¼
+    // ‰Ÿ‚³‚ê‚½ƒL[
     char key_code;
 };
 
-// ã‚¿ãƒ¼ãƒŸãƒŠãƒ«ã§ç™ºç”Ÿã—ãŸã‚¤ãƒ™ãƒ³ãƒˆã‚’è¡¨ã™æ§‹é€ ä½“
+// ƒ^[ƒ~ƒiƒ‹‚Å”­¶‚µ‚½ƒCƒxƒ“ƒg‚ğ•\‚·\‘¢‘Ì
 struct TerminalEvent {
-    // èµ·ããŸã‚¤ãƒ™ãƒ³ãƒˆã®ç¨®é¡
+    // ‹N‚«‚½ƒCƒxƒ“ƒg‚Ìí—Ş
     enum TerminalEventType type;
 
-    // ã‚¤ãƒ™ãƒ³ãƒˆãŒã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ã‚¤ãƒ™ãƒ³ãƒˆã®å ´åˆã€ã“ã®ä¸­ã«æƒ…å ±ãŒæ ¼ç´ã•ã‚Œã‚‹
+    // ƒCƒxƒ“ƒg‚ªƒL[ƒ{[ƒhƒCƒxƒ“ƒg‚Ìê‡A‚±‚Ì’†‚Éî•ñ‚ªŠi”[‚³‚ê‚é
     struct TerminalKeyboardEvent keyboard_event;
 };
 
-// Terminal æ§‹é€ ä½“ã‚’å–å¾—ã™ã‚‹é–¢æ•°
+// Terminal \‘¢‘Ì‚ğæ“¾‚·‚éŠÖ”
 struct Terminal get_term(void);
 
-// ã‚¿ãƒ¼ãƒŸãƒŠãƒ«ã‚’ç©ºç™½ã«ã™ã‚‹é–¢æ•°
+// ƒ^[ƒ~ƒiƒ‹‚ğ‹ó”’‚É‚·‚éŠÖ”
 void term_clear(struct Terminal *terminal);
 
-// ã‚«ãƒ¼ã‚½ãƒ«ã®å¯è¦–çŠ¶æ…‹ã‚’è¨­å®šã™ã‚‹é–¢æ•°
+// ƒJ[ƒ\ƒ‹‚Ì‰Â‹ó‘Ô‚ğİ’è‚·‚éŠÖ”
 void term_set_cursor_visible(struct Terminal *terminal, bool visible);
 
-// ã‚¿ãƒ¼ãƒŸãƒŠãƒ«ã®å‰æ™¯è‰²ã‚’è¨­å®šã™ã‚‹é–¢æ•°
+// ƒ^[ƒ~ƒiƒ‹‚Ì‘OŒiF‚ğİ’è‚·‚éŠÖ”
 void term_set_fg(struct Terminal *terminal, enum TerminalColor color);
 
-// ã‚¿ãƒ¼ãƒŸãƒŠãƒ«ã®èƒŒæ™¯è‰²ã‚’è¨­å®šã™ã‚‹é–¢æ•°
+// ƒ^[ƒ~ƒiƒ‹‚Ì”wŒiF‚ğİ’è‚·‚éŠÖ”
 void term_set_bg(struct Terminal *terminal, enum TerminalColor color);
 
-// ã‚«ãƒ¼ã‚½ãƒ«ã®å ´æ‰€ã‚’è¨­å®šã™ã‚‹é–¢æ•°
+// ƒJ[ƒ\ƒ‹‚ÌêŠ‚ğİ’è‚·‚éŠÖ”
 void term_set_cursor_pos(struct Terminal *terminal, size_t x, size_t y);
 
-// Terminal æ§‹é€ ä½“ã‚’ç ´å£Šã—ã¦å…ƒã®çŠ¶æ…‹ã«æˆ»ã™é–¢æ•°
+// Terminal \‘¢‘Ì‚ğ”j‰ó‚µ‚ÄŒ³‚Ìó‘Ô‚É–ß‚·ŠÖ”
 void term_reset(struct Terminal *terminal);
 
-// ã‚¿ãƒ¼ãƒŸãƒŠãƒ«ã‹ã‚‰1æ–‡å­—å…¥åŠ›ã‚’å–å¾—ã™ã‚‹é–¢æ•°ã€‚term_poll_eventã«ç½®ãæ›ãˆã‚‰ã‚ŒãŸãŸã‚ä½¿ã‚ã‚Œã¦ã„ãªã„ã€‚
+// ƒ^[ƒ~ƒiƒ‹‚©‚ç1•¶š“ü—Í‚ğæ“¾‚·‚éŠÖ”Bterm_poll_event‚É’u‚«Š·‚¦‚ç‚ê‚½‚½‚ßg‚í‚ê‚Ä‚¢‚È‚¢B
 char term_get_char(void);
 
-// ã‚¿ãƒ¼ãƒŸãƒŠãƒ«ã«æ–‡å­—ã‚’è¡¨ç¤ºã™ã‚‹é–¢æ•°ã€‚printfã«éå¸¸ã«ä¼¼ã¦ã„ã‚‹ã€‚
+// ƒ^[ƒ~ƒiƒ‹‚É•¶š‚ğ•\¦‚·‚éŠÖ”Bprintf‚É”ñí‚É—‚Ä‚¢‚éB
 void term_print(struct Terminal *terminal, const char *format, ...);
 
-// ã‚¿ãƒ¼ãƒŸãƒŠãƒ«ã‹ã‚‰1ã‚¤ãƒ™ãƒ³ãƒˆå–å¾—ã™ã‚‹é–¢æ•°ã€‚
+// ƒ^[ƒ~ƒiƒ‹‚©‚ç1ƒCƒxƒ“ƒgæ“¾‚·‚éŠÖ”B
 struct TerminalEvent term_poll_event(struct Terminal *terminal);
 
 #include <stdint.h>
 
-// å˜èªæ§‹é€ ä½“
+// ’PŒê\‘¢‘Ì
 struct Word {
-    // æ–‡å­—æ•°
+    // •¶š”
     size_t char_count;
-    // æ–‡å­—
+    // •¶š
     const char *pointer;
 };
 
-// ãƒ©ãƒ³ãƒ€ãƒ ãªå˜èªã‚’è¿”ã™é–¢æ•°
+// ƒ‰ƒ“ƒ_ƒ€‚È’PŒê‚ğ•Ô‚·ŠÖ”
 const struct Word random_word(void);
 
-// åç¸®å¯èƒ½ãªWordæ§‹é€ ä½“ã®é…åˆ—
+// ûk‰Â”\‚ÈWord\‘¢‘Ì‚Ì”z—ñ
 struct WordVector {
-    // ãƒ¡ãƒ¢ãƒªé ˜åŸŸã¸ã®ãƒã‚¤ãƒ³ã‚¿
+    // ƒƒ‚ƒŠ—Ìˆæ‚Ö‚Ìƒ|ƒCƒ“ƒ^
     struct Word *pointer;
-    // ç¾åœ¨ã®é…åˆ—ã®é•·ã•
+    // Œ»İ‚Ì”z—ñ‚Ì’·‚³
     size_t length;
-    // ç¾åœ¨ç¢ºä¿ã•ã‚Œã¦ã„ã‚‹ãƒ¡ãƒ¢ãƒªé ˜åŸŸã®å®¹é‡
+    // Œ»İŠm•Û‚³‚ê‚Ä‚¢‚éƒƒ‚ƒŠ—Ìˆæ‚Ì—e—Ê
     size_t capacity;
 };
 
-// æ–°ã—ã„ WordVector ã‚’ä½œæˆã™ã‚‹é–¢æ•°
+// V‚µ‚¢ WordVector ‚ğì¬‚·‚éŠÖ”
 struct WordVector word_vector_new(void);
 
-// self ã® index ç•ªç›®ã®è¦ç´ ã‚’å–å¾—ã™ã‚‹é–¢æ•°
+// self ‚Ì index ”Ô–Ú‚Ì—v‘f‚ğæ“¾‚·‚éŠÖ”
 struct Word word_vector_get(struct WordVector *self, size_t index);
 
-// self ã®æœ€å¾Œã« value ã‚’è¿½åŠ ã™ã‚‹é–¢æ•°
+// self ‚ÌÅŒã‚É value ‚ğ’Ç‰Á‚·‚éŠÖ”
 void word_vector_push(struct WordVector *self, struct Word value);
 
-// self ã®æœ€å¾Œã®è¦ç´ ã‚’æ¶ˆå»ã™ã‚‹é–¢æ•°
+// self ‚ÌÅŒã‚Ì—v‘f‚ğÁ‹‚·‚éŠÖ”
 struct Word word_vector_pop(struct WordVector *self);
 
-// self ã‚’é–‹æ”¾ã™ã‚‹é–¢æ•°
+// self ‚ğŠJ•ú‚·‚éŠÖ”
 void word_vector_free(struct WordVector *self);
 
-// self ã«æ–°ãŸã«sizeé ˜åŸŸç¢ºä¿ã™ã‚‹é–¢æ•°
+// self ‚ÉV‚½‚Ésize—ÌˆæŠm•Û‚·‚éŠÖ”
 const struct WordVector random_words(size_t count);
 
 #include <locale.h>
@@ -193,11 +193,11 @@ const struct WordVector random_words(size_t count);
 
 #define ESC_KEY 27
 
-// ã‚¿ãƒ¼ãƒŸãƒŠãƒ«ã®æ“ä½œã«ä½¿ã†æ§‹é€ ä½“ã®å®Ÿæ…‹
-// ãƒ—ãƒ­ã‚°ãƒ©ãƒ ä¸­ã§1ã¤ã—ã‹ä½œæˆã—ãªã„ã®ã§ã€failure_hooké–¢æ•°ã§ä½¿ã†ãŸã‚ã«ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°ã«ã—ã¦ã‚ã‚‹ã€‚
+// ƒ^[ƒ~ƒiƒ‹‚Ì‘€ì‚Ég‚¤\‘¢‘Ì‚ÌÀ‘Ô
+// ƒvƒƒOƒ‰ƒ€’†‚Å1‚Â‚µ‚©ì¬‚µ‚È‚¢‚Ì‚ÅAfailure_hookŠÖ”‚Åg‚¤‚½‚ß‚ÉƒOƒ[ƒoƒ‹•Ï”‚É‚µ‚Ä‚ ‚éB
 struct Terminal TERMINAL;
 
-// ã‚²ãƒ¼ãƒ ã®æƒ…å ±ã‚’æ ¼ç´ã™ã‚‹æ§‹é€ ä½“
+// ƒQ[ƒ€‚Ìî•ñ‚ğŠi”[‚·‚é\‘¢‘Ì
 struct Game {
     struct WordVector words;
     size_t char_index;
@@ -205,7 +205,7 @@ struct Game {
     bool previous_correct;
 };
 
-// ã‚²ãƒ¼ãƒ ã®çµæœã®æƒ…å ±ã‚’æ ¼ç´ã™ã‚‹æ§‹é€ ä½“
+// ƒQ[ƒ€‚ÌŒ‹‰Ê‚Ìî•ñ‚ğŠi”[‚·‚é\‘¢‘Ì
 struct GameResult {
     clock_t started_on;
     clock_t ended_on;
@@ -213,36 +213,36 @@ struct GameResult {
     int miss_types;
 };
 
-// ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã®çŠ¶æ…‹å…¨ã¦ã‚’æ ¼ç´ã™ã‚‹æ§‹é€ ä½“
+// ƒvƒƒOƒ‰ƒ€‚Ìó‘Ô‘S‚Ä‚ğŠi”[‚·‚é\‘¢‘Ì
 struct Context {
-    bool running;             // ãƒ—ãƒ­ã‚°ãƒ©ãƒ ãŒå®Ÿè¡Œã•ã‚Œã¦ã„ã‚‹ã‹ï¼Ÿ
-    bool gaming;              // ã‚¿ã‚¤ãƒ”ãƒ³ã‚°ã‚²ãƒ¼ãƒ ä¸­ã‹ï¼Ÿ
-    char last_key_code;       // æœ€å¾Œã«å…¥åŠ›ã•ã‚ŒãŸã‚­ãƒ¼ã‚³ãƒ¼ãƒ‰
-    struct Game game;         // ã‚²ãƒ¼ãƒ æƒ…å ±
-    struct GameResult result; // ã‚²ãƒ¼ãƒ ã®çµæœæƒ…å ±
+    bool running;             // ƒvƒƒOƒ‰ƒ€‚ªÀs‚³‚ê‚Ä‚¢‚é‚©H
+    bool gaming;              // ƒ^ƒCƒsƒ“ƒOƒQ[ƒ€’†‚©H
+    char last_key_code;       // ÅŒã‚É“ü—Í‚³‚ê‚½ƒL[ƒR[ƒh
+    struct Game game;         // ƒQ[ƒ€î•ñ
+    struct GameResult result; // ƒQ[ƒ€‚ÌŒ‹‰Êî•ñ
 };
 
-// ã‚²ãƒ¼ãƒ ç”»é¢ã‚’è¡¨ç¤ºã™ã‚‹é–¢æ•°ã®ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—å®£è¨€
+// ƒQ[ƒ€‰æ–Ê‚ğ•\¦‚·‚éŠÖ”‚Ìƒvƒƒgƒ^ƒCƒvéŒ¾
 void game_render(struct Context *context);
-// ã‚²ãƒ¼ãƒ ç”»é¢ãŒè¡¨ç¤ºã•ã‚Œã¦ã„ã‚‹æ™‚ã«ã‚­ãƒ¼å…¥åŠ›ã•ã‚ŒãŸã¨ãã«å®Ÿè¡Œã•ã‚Œã‚‹é–¢æ•°ã®ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—å®£è¨€
+// ƒQ[ƒ€‰æ–Ê‚ª•\¦‚³‚ê‚Ä‚¢‚é‚ÉƒL[“ü—Í‚³‚ê‚½‚Æ‚«‚ÉÀs‚³‚ê‚éŠÖ”‚Ìƒvƒƒgƒ^ƒCƒvéŒ¾
 void game_on_key_type(struct Context *context, char input);
 
-// ãƒªã‚¶ãƒ«ãƒ‰ç”»é¢ã‚’è¡¨ç¤ºã™ã‚‹é–¢æ•°ã®ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—å®£è¨€
+// ƒŠƒUƒ‹ƒh‰æ–Ê‚ğ•\¦‚·‚éŠÖ”‚Ìƒvƒƒgƒ^ƒCƒvéŒ¾
 void result_render(struct Context *context);
-// ãƒªã‚¶ãƒ«ãƒ‰ç”»é¢ãŒè¡¨ç¤ºã•ã‚Œã¦ã„ã‚‹æ™‚ã«ã‚­ãƒ¼å…¥åŠ›ã•ã‚ŒãŸã¨ãã«å®Ÿè¡Œã•ã‚Œã‚‹é–¢æ•°ã®ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—å®£è¨€
+// ƒŠƒUƒ‹ƒh‰æ–Ê‚ª•\¦‚³‚ê‚Ä‚¢‚é‚ÉƒL[“ü—Í‚³‚ê‚½‚Æ‚«‚ÉÀs‚³‚ê‚éŠÖ”‚Ìƒvƒƒgƒ^ƒCƒvéŒ¾
 void result_on_key_type(struct Context *context, char input);
 
 int main(void) {
     srand((unsigned)time(NULL));
 
-    // ãƒ­ã‚±ãƒ¼ãƒ«ã‚’è¨­å®šã™ã‚‹ã€‚mblené–¢æ•°ã®æŒ™å‹•ãªã©ã«å½±éŸ¿ã™ã‚‹
+    // ƒƒP[ƒ‹‚ğİ’è‚·‚éBmblenŠÖ”‚Ì‹““®‚È‚Ç‚É‰e‹¿‚·‚é
     if (setlocale(LC_CTYPE, "") == NULL) {
         // cannot use failure macro because TERMINAL is not initialized.
         fprintf(stderr, "failed to set locale");
         return 1;
     }
 
-    // ã‚¿ãƒ¼ãƒŸãƒŠãƒ«æ§‹é€ ä½“ã‚’åˆæœŸåŒ–ã—ã¦ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°ã«ä»£å…¥ã™ã‚‹
+    // ƒ^[ƒ~ƒiƒ‹\‘¢‘Ì‚ğ‰Šú‰»‚µ‚ÄƒOƒ[ƒoƒ‹•Ï”‚É‘ã“ü‚·‚é
     TERMINAL = get_term();
 
     struct Context context = {
@@ -258,31 +258,31 @@ int main(void) {
         .result = { 0 },
     };
 
-    // ã‚«ãƒ¼ã‚½ãƒ«ã‚’éè¡¨ç¤ºã™ã‚‹
+    // ƒJ[ƒ\ƒ‹‚ğ”ñ•\¦‚·‚é
     term_set_cursor_visible(&TERMINAL, false);
 
     do {
-        // é©åˆ‡ãªç”»é¢ã‚’è¡¨ç¤ºã™ã‚‹
+        // “KØ‚È‰æ–Ê‚ğ•\¦‚·‚é
         if (context.gaming) {
             game_render(&context);
         } else {
             result_render(&context);
         }
 
-        // ã‚¿ãƒ¼ãƒŸãƒŠãƒ«ã§ç™ºç”Ÿã—ãŸã‚¤ãƒ™ãƒ³ãƒˆã‚’å–å¾—ã™ã‚‹
+        // ƒ^[ƒ~ƒiƒ‹‚Å”­¶‚µ‚½ƒCƒxƒ“ƒg‚ğæ“¾‚·‚é
         const struct TerminalEvent event = term_poll_event(&TERMINAL);
 
         switch (event.type) {
-        // ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ãŒæ“ä½œã•ã‚ŒãŸã¨ã
+        // ƒL[ƒ{[ƒh‚ª‘€ì‚³‚ê‚½‚Æ‚«
         case KEYBOARD_EVENT:
             const char keycode = event.keyboard_event.key_code;
             context.last_key_code = keycode;
             if (keycode == ESC_KEY) {
-                // esc ã‚­ãƒ¼ãŒæŠ¼ã•ã‚ŒãŸã¨ãã¯ã‚²ãƒ¼ãƒ ã‚’çµ‚äº†ã™ã‚‹
+                // esc ƒL[‚ª‰Ÿ‚³‚ê‚½‚Æ‚«‚ÍƒQ[ƒ€‚ğI—¹‚·‚é
                 context.running = false;
             }
 
-            // ç”»é¢ã«å¿œã˜ãŸé–¢æ•°ã‚’å‘¼ã³å‡ºã™
+            // ‰æ–Ê‚É‰‚¶‚½ŠÖ”‚ğŒÄ‚Ño‚·
             if (context.gaming) {
                 game_on_key_type(&context, keycode);
             } else {
@@ -295,38 +295,38 @@ int main(void) {
             break;
         }
 
-        // ã‚¿ãƒ¼ãƒŸãƒŠãƒ«ã®ç”»é¢ã‚’ã‚¯ãƒªã‚¢ã™ã‚‹
+        // ƒ^[ƒ~ƒiƒ‹‚Ì‰æ–Ê‚ğƒNƒŠƒA‚·‚é
         term_clear(&TERMINAL);
     } while (context.running);
 
-    // ã‚¿ãƒ¼ãƒŸãƒŠãƒ«ã‚’å…ƒã®çŠ¶æ…‹ã«æˆ»ã™
+    // ƒ^[ƒ~ƒiƒ‹‚ğŒ³‚Ìó‘Ô‚É–ß‚·
     term_reset(&TERMINAL);
     return 0;
 }
 
-// ã‚²ãƒ¼ãƒ ç”»é¢ã‚’è¡¨ç¤ºã™ã‚‹é–¢æ•°
+// ƒQ[ƒ€‰æ–Ê‚ğ•\¦‚·‚éŠÖ”
 void game_render(struct Context *context) {
     if (context->game.words.length == 0) {
-        // ã‚²ãƒ¼ãƒ çµ‚ã‚ã‚Š
+        // ƒQ[ƒ€I‚í‚è
         context->gaming = false;
         context->result.ended_on = clock();
         result_render(context);
         return;
     }
 
-    // ç¾åœ¨ã®å˜èªã¯ã€å˜èªãƒªã‚¹ãƒˆã®ä¸€ç•ªæœ€å¾Œã®å˜èªãªã®ã§ã€ãã‚Œã‚’å–å¾—ã™ã‚‹
+    // Œ»İ‚Ì’PŒê‚ÍA’PŒêƒŠƒXƒg‚Ìˆê”ÔÅŒã‚Ì’PŒê‚È‚Ì‚ÅA‚»‚ê‚ğæ“¾‚·‚é
     const struct Word current_word
         = context->game.words.pointer[context->game.words.length - 1];
     struct CharVector current_char
         = string_at(current_word.pointer, context->game.char_index);
 
-    // ç¾åœ¨ã®æ–‡å­—ã‚’å…¥åŠ›ã§ãã‚‹ãƒ­ãƒ¼ãƒå­—ã®ãƒ‘ã‚¿ãƒ¼ãƒ³ã‚’å–å¾—ã™ã‚‹
+    // Œ»İ‚Ì•¶š‚ğ“ü—Í‚Å‚«‚éƒ[ƒ}š‚Ìƒpƒ^[ƒ“‚ğæ“¾‚·‚é
     const struct StringSlice *romas = get_roma(current_char.pointer);
 
     term_set_fg(&TERMINAL, WHITE);
     term_set_bg(&TERMINAL, BLACK);
 
-    term_print(&TERMINAL, "ESC: çµ‚äº† debug: %d %d %d %s\n",
+    term_print(&TERMINAL, "ESC: I—¹ debug: %d %d %d %s\n",
                context->last_key_code, context->result.total_types,
                context->result.miss_types,
                context->game.previous_correct ? "true" : "false");
@@ -335,21 +335,21 @@ void game_render(struct Context *context) {
     {
         assert(romas->length > 0, "romas was empty");
 
-        // ãƒ­ãƒ¼ãƒå­—ãƒ‘ã‚¿ãƒ¼ãƒ³ã®ä¸€ç•ªæœ€åˆã®ã‚‚ã®ã‚’ä»£è¡¨ã¨ã—ã¦è¡¨ç¤ºã™ã‚‹
+        // ƒ[ƒ}šƒpƒ^[ƒ“‚Ìˆê”ÔÅ‰‚Ì‚à‚Ì‚ğ‘ã•\‚Æ‚µ‚Ä•\¦‚·‚é
         const char *roma = romas->pointer[0];
         for (size_t i = 0; roma[i] != '\0'; i++) {
             if (i < context->game.roma_index) {
-                // æ—¢ã«å…¥åŠ›æ¸ˆã¿ã®æ–‡å­—ã¯ç·‘è‰²ã§è¡¨ç¤ºã™ã‚‹
+                // Šù‚É“ü—ÍÏ‚İ‚Ì•¶š‚Í—ÎF‚Å•\¦‚·‚é
                 term_set_fg(&TERMINAL, GREEN);
             } else if (i == context->game.roma_index) {
-                // ç¾åœ¨å…¥åŠ›ã™ã¹ãæ–‡å­—ã¯èµ¤è‰²ã§ãƒã‚¤ãƒ©ã‚¤ãƒˆã™ã‚‹
+                // Œ»İ“ü—Í‚·‚×‚«•¶š‚ÍÔF‚ÅƒnƒCƒ‰ƒCƒg‚·‚é
                 term_set_fg(&TERMINAL, BLACK);
                 term_set_bg(&TERMINAL, RED);
             }
 
             term_print(&TERMINAL, "%c", roma[i]);
 
-            // å…ƒã®è‰²ã«æˆ»ã™
+            // Œ³‚ÌF‚É–ß‚·
             term_set_fg(&TERMINAL, WHITE);
             term_set_bg(&TERMINAL, BLACK);
         }
@@ -360,10 +360,10 @@ void game_render(struct Context *context) {
     {
         for (size_t i = 0; i < current_word.char_count; i++) {
             if (i < context->game.char_index) {
-                // æ—¢ã«å…¥åŠ›æ¸ˆã¿ã®æ–‡å­—ã¯ç·‘è‰²ã§è¡¨ç¤ºã™ã‚‹
+                // Šù‚É“ü—ÍÏ‚İ‚Ì•¶š‚Í—ÎF‚Å•\¦‚·‚é
                 term_set_fg(&TERMINAL, GREEN);
             } else if (i == context->game.char_index) {
-                // ç¾åœ¨å…¥åŠ›ã™ã¹ãæ–‡å­—ã¯èµ¤è‰²ã§ãƒã‚¤ãƒ©ã‚¤ãƒˆã™ã‚‹
+                // Œ»İ“ü—Í‚·‚×‚«•¶š‚ÍÔF‚ÅƒnƒCƒ‰ƒCƒg‚·‚é
                 term_set_fg(&TERMINAL, BLACK);
                 term_set_bg(&TERMINAL, RED);
             }
@@ -379,7 +379,7 @@ void game_render(struct Context *context) {
 
     term_print(&TERMINAL, "\n");
 
-    // é€†é †ã«ãƒªã‚¹ãƒˆã‚’è¡¨ç¤ºã™ã‚‹ã€‚ãªãŠä¸€ç•ªæœ€å¾Œã®è¦ç´ ã¯ç¾åœ¨å…¥åŠ›ã™ã¹ãå˜èªã§ã‚ã‚‹ã‹ã‚‰è¡¨ç¤ºã—ãªã„ã€‚
+    // ‹t‡‚ÉƒŠƒXƒg‚ğ•\¦‚·‚éB‚È‚¨ˆê”ÔÅŒã‚Ì—v‘f‚ÍŒ»İ“ü—Í‚·‚×‚«’PŒê‚Å‚ ‚é‚©‚ç•\¦‚µ‚È‚¢B
     for (int i = context->game.words.length - 2; i >= 0; i--) {
         term_print(&TERMINAL, "%s\n", context->game.words.pointer[i].pointer);
     }
@@ -408,19 +408,19 @@ void game_on_key_type(struct Context *context, char input) {
         const size_t roma_len = string_len(roma);
 
         if (roma_len > game_roma_index && roma[game_roma_index] == input) {
-            // æ­£ã—ã„å…¥åŠ›ãŒã•ã‚ŒãŸ
+            // ³‚µ‚¢“ü—Í‚ª‚³‚ê‚½
             context->result.total_types += 1;
             is_correct = true;
 
             if (roma_len - 1 == game_roma_index) {
-                // 1ã²ã‚‰ãŒãªæ–‡å­—ã®æœ€å¾Œ
+                // 1‚Ğ‚ç‚ª‚È•¶š‚ÌÅŒã
 
                 context->game.roma_index = 0;
                 context->game.char_index += 1;
 
                 if (current_word.char_count == context->game.char_index) {
-                    // 1å˜èªã®æœ€å¾Œ
-                    // å˜èªãƒªã‚¹ãƒˆã®ä¸€ç•ªæœ€å¾Œã®è¦ç´ ã‚’å‰Šé™¤ã™ã‚‹
+                    // 1’PŒê‚ÌÅŒã
+                    // ’PŒêƒŠƒXƒg‚Ìˆê”ÔÅŒã‚Ì—v‘f‚ğíœ‚·‚é
                     word_vector_pop(&context->game.words);
                     context->game.char_index = 0;
                 }
@@ -434,30 +434,30 @@ void game_on_key_type(struct Context *context, char input) {
     }
 
     if (!is_correct) {
-        // æ­£ã—ã„å…¥åŠ›ã•ã‚Œã¦ã„ãªã„å ´åˆã¯ãƒŸã‚¹ã‚«ã‚¦ãƒ³ãƒˆã‚’å¢—ã‚„ã™
+        // ³‚µ‚¢“ü—Í‚³‚ê‚Ä‚¢‚È‚¢ê‡‚Íƒ~ƒXƒJƒEƒ“ƒg‚ğ‘‚â‚·
         context->result.miss_types += 1;
     }
 }
 
 void result_render(struct Context *context) {
     const struct GameResult result = context->result;
-    // ã‚²ãƒ¼ãƒ ãŒå‹•ä½œã—ãŸæ™‚é–“ã‚’è¨ˆç®—ã™ã‚‹ã€‚å˜ä½ãŒã‚¯ãƒ­ãƒƒã‚¯ã§æ ¼ç´ã•ã‚Œã¦ã„ã‚‹ã®ã§ã€CLOCKS_PER_SECã§å‰²ã£ã¦ç§’ã«å¤‰æ›ã™ã‚‹ã€€
+    // ƒQ[ƒ€‚ª“®ì‚µ‚½ŠÔ‚ğŒvZ‚·‚éB’PˆÊ‚ªƒNƒƒbƒN‚ÅŠi”[‚³‚ê‚Ä‚¢‚é‚Ì‚ÅACLOCKS_PER_SEC‚ÅŠ„‚Á‚Ä•b‚É•ÏŠ·‚·‚é@
     const double gameDurationSec = (double)(result.ended_on - result.started_on)
                                    / (double)CLOCKS_PER_SEC;
     const double keys_per_sec = result.total_types / gameDurationSec;
 
-    term_print(&TERMINAL, "çµ‚äº†: esc ã‚‚ã†ä¸€åº¦ãƒ—ãƒ¬ã‚¤: space\n\n");
+    term_print(&TERMINAL, "I—¹: esc ‚à‚¤ˆê“xƒvƒŒƒC: space\n\n");
 
-    term_print(&TERMINAL, "ã‚²ãƒ¼ãƒ çµæœ\n");
-    term_print(&TERMINAL, "ã‹ã‹ã£ãŸæ™‚é–“(ç§’): %02.02f\n", gameDurationSec);
-    term_print(&TERMINAL, "ç·ã‚­ãƒ¼ã‚¿ã‚¤ãƒ—æ•°: %u\n", result.total_types);
-    term_print(&TERMINAL, "ãƒŸã‚¹ã‚¿ã‚¤ãƒ—æ•°: %u\n", result.miss_types);
-    term_print(&TERMINAL, "ç§’é–“ã‚­ãƒ¼ã‚¿ã‚¤ãƒ—æ•°: %02.02f\n", keys_per_sec);
+    term_print(&TERMINAL, "ƒQ[ƒ€Œ‹‰Ê\n");
+    term_print(&TERMINAL, "‚©‚©‚Á‚½ŠÔ(•b): %02.02f\n", gameDurationSec);
+    term_print(&TERMINAL, "‘ƒL[ƒ^ƒCƒv”: %u\n", result.total_types);
+    term_print(&TERMINAL, "ƒ~ƒXƒ^ƒCƒv”: %u\n", result.miss_types);
+    term_print(&TERMINAL, "•bŠÔƒL[ƒ^ƒCƒv”: %02.02f\n", keys_per_sec);
 }
 
 void result_on_key_type(struct Context *context, char input) {
     if (input == 32) {
-        // spaceã‚­ãƒ¼ãŒæŠ¼ã•ã‚ŒãŸã¨ãã«ã€ã‚²ãƒ¼ãƒ ã‚’åˆæœŸåŒ–ã—ã¦ã‚²ãƒ¼ãƒ ç”»é¢ã«æˆ»ã™
+        // spaceƒL[‚ª‰Ÿ‚³‚ê‚½‚Æ‚«‚ÉAƒQ[ƒ€‚ğ‰Šú‰»‚µ‚ÄƒQ[ƒ€‰æ–Ê‚É–ß‚·
         context->result = (struct GameResult){0};
         context->game.char_index = 0;
         context->game.roma_index = 0;
@@ -485,7 +485,7 @@ void failure_hook(const char *filename, int line, const char *msg, ...) {
 
 #define INITIAL_CAPACITY 2
 
-// æ–°ã—ã„ CharVector ã‚’ä½œæˆã™ã‚‹é–¢æ•°
+// V‚µ‚¢ CharVector ‚ğì¬‚·‚éŠÖ”
 struct CharVector char_vector_new(void) {
     const struct CharVector result = {
         .pointer = malloc(sizeof(char) * INITIAL_CAPACITY),
@@ -498,7 +498,7 @@ struct CharVector char_vector_new(void) {
     return result;
 }
 
-// self ã® index ç•ªç›®ã®è¦ç´ ã‚’å–å¾—ã™ã‚‹é–¢æ•°
+// self ‚Ì index ”Ô–Ú‚Ì—v‘f‚ğæ“¾‚·‚éŠÖ”
 char char_vector_get(struct CharVector *self, size_t index) {
     assert(
         index < self->length,
@@ -508,31 +508,31 @@ char char_vector_get(struct CharVector *self, size_t index) {
     return self->pointer[index];
 }
 
-// self ã®æœ€å¾Œã« value ã‚’è¿½åŠ ã™ã‚‹é–¢æ•°
+// self ‚ÌÅŒã‚É value ‚ğ’Ç‰Á‚·‚éŠÖ”
 void char_vector_push(struct CharVector *self, char value) {
     assert(self != NULL, "passed NULL to char_vector_push");
     assert(self->pointer != NULL, "passed freed or invalid CharVector");
 
     if (self->capacity == self->length) {
-        // ã‚‚ã†ã‚ã¾ã‚Šã®é ˜åŸŸãŒç„¡ã‘ã‚Œã°ã€ã•ã‚‰ã«å®¹é‡ã‚’å€ã«ã—ã¦å†ç¢ºä¿ã™ã‚‹
+        // ‚à‚¤‚ ‚Ü‚è‚Ì—Ìˆæ‚ª–³‚¯‚ê‚ÎA‚³‚ç‚É—e—Ê‚ğ”{‚É‚µ‚ÄÄŠm•Û‚·‚é
         const size_t new_size_bytes = self->capacity * 2 * sizeof(char);
 
         self->pointer = realloc(self->pointer, new_size_bytes);
         self->capacity *= 2;
     }
 
-    // æœ€å¾Œã«è¿½åŠ ã—ã¦é•·ã•ã‚’1å¢—ã‚„ã™
+    // ÅŒã‚É’Ç‰Á‚µ‚Ä’·‚³‚ğ1‘‚â‚·
     self->pointer[self->length] = value;
     self->length += 1;
 }
 
-// self ã®æœ€å¾Œã« str ã‚’è¿½åŠ ã™ã‚‹é–¢æ•°
+// self ‚ÌÅŒã‚É str ‚ğ’Ç‰Á‚·‚éŠÖ”
 void char_vector_pushstr(struct CharVector *self, const char *str) {
     assert(self != NULL, "passed NULL to char_vector_push(self)");
     assert(str != NULL, "passed NULL to char_vector_pushstr(str)");
     assert(self->pointer != NULL, "passed freed or invalid CharVector");
 
-    // ãƒŒãƒ«æ–‡å­—ã«å½“ãŸã‚‹ã¾ã§pushã—ç¶šã‘ã‚‹
+    // ƒkƒ‹•¶š‚É“–‚½‚é‚Ü‚Åpush‚µ‘±‚¯‚é
     size_t index = 0;
     while (str[index] != '\0') {
         char_vector_push(self, str[index]);
@@ -540,7 +540,7 @@ void char_vector_pushstr(struct CharVector *self, const char *str) {
     }
 }
 
-// self ã®æœ€å¾Œã®è¦ç´ ã‚’æ¶ˆå»ã™ã‚‹é–¢æ•°
+// self ‚ÌÅŒã‚Ì—v‘f‚ğÁ‹‚·‚éŠÖ”
 char char_vector_pop(struct CharVector *self) {
     assert(self != NULL, "passed NULL to char_vector_push(self)");
     assert(self->pointer != NULL, "passed freed or invalid CharVector");
@@ -553,17 +553,17 @@ char char_vector_pop(struct CharVector *self) {
     return result;
 }
 
-// self ã‚’é–‹æ”¾ã™ã‚‹é–¢æ•°
+// self ‚ğŠJ•ú‚·‚éŠÖ”
 void char_vector_free(struct CharVector *self) {
     assert(self != NULL, "passed NULL to char_vector_push");
     assert(self->pointer != NULL, "passed freed or invalid CharVector");
 
-    // ãƒ¡ãƒ¢ãƒªé ˜åŸŸã‚’è§£æ”¾ã™ã‚‹
+    // ƒƒ‚ƒŠ—Ìˆæ‚ğ‰ğ•ú‚·‚é
     free(self->pointer);
     self->pointer = NULL;
 }
 
-// self ã«æ–°ãŸã«sizeé ˜åŸŸç¢ºä¿ã™ã‚‹é–¢æ•°
+// self ‚ÉV‚½‚Ésize—ÌˆæŠm•Û‚·‚éŠÖ”
 // size is number of additional elements, not bytes.
 void char_vector_reserve(struct CharVector *self, size_t size) {
     if (self->capacity - self->length < size) {
@@ -586,80 +586,80 @@ void char_vector_reserve(struct CharVector *self, size_t size) {
 const struct StringSlice *get_roma(const char *hiragana) {
     assert(hiragana != NULL, "passed NULL to get_roma(hiragana)");
 
-    // å…¥åŠ›ã•ã‚ŒãŸã²ã‚‰ãŒãªã«å¯¾ã—ã¦å¯¾å¿œã™ã‚‹ãƒ­ãƒ¼ãƒå­—ã®ä¸€è¦§ã‚’è¿”å´ã™ã‚‹ã€‚
-    // åŒã˜ã‚ˆã†ãªã‚³ãƒ¼ãƒ‰ãŒä¸¦ã¶ãŸã‚ã€ãƒã‚¯ãƒ­ã‚’ä½¿ã£ã¦çœç•¥ã™ã‚‹ã€‚
-    __GET_ROMA_IMPL("ã‚", 1, "a")
-    __GET_ROMA_IMPL("ã„", 1, "i")
-    __GET_ROMA_IMPL("ã†", 1, "u")
-    __GET_ROMA_IMPL("ãˆ", 1, "e")
-    __GET_ROMA_IMPL("ãŠ", 1, "o")
-    __GET_ROMA_IMPL("ã‹", 1, "ka")
-    __GET_ROMA_IMPL("ã", 1, "ki")
-    __GET_ROMA_IMPL("ã", 1, "ku")
-    __GET_ROMA_IMPL("ã‘", 1, "ke")
-    __GET_ROMA_IMPL("ã“", 1, "ko")
-    __GET_ROMA_IMPL("ãŒ", 1, "ga")
-    __GET_ROMA_IMPL("ã", 1, "gi")
-    __GET_ROMA_IMPL("ã", 1, "gu")
-    __GET_ROMA_IMPL("ã’", 1, "ge")
-    __GET_ROMA_IMPL("ã”", 1, "go")
-    __GET_ROMA_IMPL("ã•", 1, "sa")
-    __GET_ROMA_IMPL("ã—", 1, "si")
-    __GET_ROMA_IMPL("ã™", 1, "su")
-    __GET_ROMA_IMPL("ã›", 1, "se")
-    __GET_ROMA_IMPL("ã", 1, "so")
-    __GET_ROMA_IMPL("ã–", 1, "za")
-    __GET_ROMA_IMPL("ã˜", 2, "zi", "ji")
-    __GET_ROMA_IMPL("ãš", 1, "zu")
-    __GET_ROMA_IMPL("ãœ", 1, "ze")
-    __GET_ROMA_IMPL("ã", 1, "zo")
-    __GET_ROMA_IMPL("ãŸ", 1, "ta")
-    __GET_ROMA_IMPL("ã¡", 2, "ti", "chi")
-    __GET_ROMA_IMPL("ã¤", 2, "tu", "tsu")
-    __GET_ROMA_IMPL("ã¦", 1, "te")
-    __GET_ROMA_IMPL("ã¨", 1, "to")
-    __GET_ROMA_IMPL("ã ", 1, "da")
-    __GET_ROMA_IMPL("ã¢", 1, "di")
-    __GET_ROMA_IMPL("ã¥", 1, "du")
-    __GET_ROMA_IMPL("ã§", 1, "de")
-    __GET_ROMA_IMPL("ã©", 1, "do")
-    __GET_ROMA_IMPL("ãª", 1, "na")
-    __GET_ROMA_IMPL("ã«", 1, "ni")
-    __GET_ROMA_IMPL("ã¬", 1, "nu")
-    __GET_ROMA_IMPL("ã­", 1, "ne")
-    __GET_ROMA_IMPL("ã®", 1, "no")
-    __GET_ROMA_IMPL("ã¯", 1, "ha")
-    __GET_ROMA_IMPL("ã²", 1, "hi")
-    __GET_ROMA_IMPL("ãµ", 2, "hu", "fu")
-    __GET_ROMA_IMPL("ã¸", 1, "he")
-    __GET_ROMA_IMPL("ã»", 1, "ho")
-    __GET_ROMA_IMPL("ã°", 1, "ba")
-    __GET_ROMA_IMPL("ã³", 1, "bi")
-    __GET_ROMA_IMPL("ã¶", 1, "bu")
-    __GET_ROMA_IMPL("ã¹", 1, "be")
-    __GET_ROMA_IMPL("ã¼", 1, "bo")
-    __GET_ROMA_IMPL("ã±", 1, "pa")
-    __GET_ROMA_IMPL("ã´", 1, "pi")
-    __GET_ROMA_IMPL("ã·", 1, "pu")
-    __GET_ROMA_IMPL("ãº", 1, "pe")
-    __GET_ROMA_IMPL("ã½", 1, "po")
-    __GET_ROMA_IMPL("ã¾", 1, "ma")
-    __GET_ROMA_IMPL("ã¿", 1, "mi")
-    __GET_ROMA_IMPL("ã‚€", 1, "mu")
-    __GET_ROMA_IMPL("ã‚", 1, "me")
-    __GET_ROMA_IMPL("ã‚‚", 1, "mo")
-    __GET_ROMA_IMPL("ã‚„", 1, "ya")
-    __GET_ROMA_IMPL("ã‚†", 1, "yu")
-    __GET_ROMA_IMPL("ã‚ˆ", 1, "yo")
-    __GET_ROMA_IMPL("ã‚‰", 1, "ra")
-    __GET_ROMA_IMPL("ã‚Š", 1, "ri")
-    __GET_ROMA_IMPL("ã‚‹", 1, "ru")
-    __GET_ROMA_IMPL("ã‚Œ", 1, "re")
-    __GET_ROMA_IMPL("ã‚", 1, "ro")
-    __GET_ROMA_IMPL("ã‚", 1, "wa")
-    __GET_ROMA_IMPL("ã‚’", 1, "wo")
-    __GET_ROMA_IMPL("ã‚“", 1, "nn")
-    __GET_ROMA_IMPL("ãƒ¼", 1, "-")
+    // “ü—Í‚³‚ê‚½‚Ğ‚ç‚ª‚È‚É‘Î‚µ‚Ä‘Î‰‚·‚éƒ[ƒ}š‚Ìˆê——‚ğ•Ô‹p‚·‚éB
+    // “¯‚¶‚æ‚¤‚ÈƒR[ƒh‚ª•À‚Ô‚½‚ßAƒ}ƒNƒ‚ğg‚Á‚ÄÈ—ª‚·‚éB
+    __GET_ROMA_IMPL("‚ ", 1, "a")
+    __GET_ROMA_IMPL("‚¢", 1, "i")
+    __GET_ROMA_IMPL("‚¤", 1, "u")
+    __GET_ROMA_IMPL("‚¦", 1, "e")
+    __GET_ROMA_IMPL("‚¨", 1, "o")
+    __GET_ROMA_IMPL("‚©", 1, "ka")
+    __GET_ROMA_IMPL("‚«", 1, "ki")
+    __GET_ROMA_IMPL("‚­", 1, "ku")
+    __GET_ROMA_IMPL("‚¯", 1, "ke")
+    __GET_ROMA_IMPL("‚±", 1, "ko")
+    __GET_ROMA_IMPL("‚ª", 1, "ga")
+    __GET_ROMA_IMPL("‚¬", 1, "gi")
+    __GET_ROMA_IMPL("‚®", 1, "gu")
+    __GET_ROMA_IMPL("‚°", 1, "ge")
+    __GET_ROMA_IMPL("‚²", 1, "go")
+    __GET_ROMA_IMPL("‚³", 1, "sa")
+    __GET_ROMA_IMPL("‚µ", 1, "si")
+    __GET_ROMA_IMPL("‚·", 1, "su")
+    __GET_ROMA_IMPL("‚¹", 1, "se")
+    __GET_ROMA_IMPL("‚»", 1, "so")
+    __GET_ROMA_IMPL("‚´", 1, "za")
+    __GET_ROMA_IMPL("‚¶", 2, "zi", "ji")
+    __GET_ROMA_IMPL("‚¸", 1, "zu")
+    __GET_ROMA_IMPL("‚º", 1, "ze")
+    __GET_ROMA_IMPL("‚¼", 1, "zo")
+    __GET_ROMA_IMPL("‚½", 1, "ta")
+    __GET_ROMA_IMPL("‚¿", 2, "ti", "chi")
+    __GET_ROMA_IMPL("‚Â", 2, "tu", "tsu")
+    __GET_ROMA_IMPL("‚Ä", 1, "te")
+    __GET_ROMA_IMPL("‚Æ", 1, "to")
+    __GET_ROMA_IMPL("‚¾", 1, "da")
+    __GET_ROMA_IMPL("‚À", 1, "di")
+    __GET_ROMA_IMPL("‚Ã", 1, "du")
+    __GET_ROMA_IMPL("‚Å", 1, "de")
+    __GET_ROMA_IMPL("‚Ç", 1, "do")
+    __GET_ROMA_IMPL("‚È", 1, "na")
+    __GET_ROMA_IMPL("‚É", 1, "ni")
+    __GET_ROMA_IMPL("‚Ê", 1, "nu")
+    __GET_ROMA_IMPL("‚Ë", 1, "ne")
+    __GET_ROMA_IMPL("‚Ì", 1, "no")
+    __GET_ROMA_IMPL("‚Í", 1, "ha")
+    __GET_ROMA_IMPL("‚Ğ", 1, "hi")
+    __GET_ROMA_IMPL("‚Ó", 2, "hu", "fu")
+    __GET_ROMA_IMPL("‚Ö", 1, "he")
+    __GET_ROMA_IMPL("‚Ù", 1, "ho")
+    __GET_ROMA_IMPL("‚Î", 1, "ba")
+    __GET_ROMA_IMPL("‚Ñ", 1, "bi")
+    __GET_ROMA_IMPL("‚Ô", 1, "bu")
+    __GET_ROMA_IMPL("‚×", 1, "be")
+    __GET_ROMA_IMPL("‚Ú", 1, "bo")
+    __GET_ROMA_IMPL("‚Ï", 1, "pa")
+    __GET_ROMA_IMPL("‚Ò", 1, "pi")
+    __GET_ROMA_IMPL("‚Õ", 1, "pu")
+    __GET_ROMA_IMPL("‚Ø", 1, "pe")
+    __GET_ROMA_IMPL("‚Û", 1, "po")
+    __GET_ROMA_IMPL("‚Ü", 1, "ma")
+    __GET_ROMA_IMPL("‚İ", 1, "mi")
+    __GET_ROMA_IMPL("‚Ş", 1, "mu")
+    __GET_ROMA_IMPL("‚ß", 1, "me")
+    __GET_ROMA_IMPL("‚à", 1, "mo")
+    __GET_ROMA_IMPL("‚â", 1, "ya")
+    __GET_ROMA_IMPL("‚ä", 1, "yu")
+    __GET_ROMA_IMPL("‚æ", 1, "yo")
+    __GET_ROMA_IMPL("‚ç", 1, "ra")
+    __GET_ROMA_IMPL("‚è", 1, "ri")
+    __GET_ROMA_IMPL("‚é", 1, "ru")
+    __GET_ROMA_IMPL("‚ê", 1, "re")
+    __GET_ROMA_IMPL("‚ë", 1, "ro")
+    __GET_ROMA_IMPL("‚í", 1, "wa")
+    __GET_ROMA_IMPL("‚ğ", 1, "wo")
+    __GET_ROMA_IMPL("‚ñ", 1, "nn")
+    __GET_ROMA_IMPL("[", 1, "-")
 
     failure("couldn't find such character in get_roma: %s", hiragana);
 }
@@ -670,16 +670,16 @@ const struct StringSlice *get_roma(const char *hiragana) {
 #include <stdio.h>
 #include <stdlib.h>
 
-// text ã®æ–‡å­—æ•°ã‚’è¿”ã™é–¢æ•°
+// text ‚Ì•¶š”‚ğ•Ô‚·ŠÖ”
 uint32_t string_len(const char *text) {
     assert(text != NULL, "passed NULL to string_len(text)");
 
     int32_t count = 0;
     size_t index = 0;
 
-    // Cè¨€èªã®æ–‡å­—åˆ—ã¯å¿…ãšãƒŒãƒ«æ–‡å­—ã§çµ‚ã‚ã‚‹
+    // CŒ¾Œê‚Ì•¶š—ñ‚Í•K‚¸ƒkƒ‹•¶š‚ÅI‚í‚é
     while (text[index] != '\0') {
-        // mblené–¢æ•°ã¯æŒ‡å®šã•ã‚ŒãŸæ–‡å­—ãŒä½•ãƒã‚¤ãƒˆã§è¡¨ã•ã‚Œã‚‹ã®ã‹ã‚’è¿”ã™é–¢æ•°
+        // mblenŠÖ”‚Íw’è‚³‚ê‚½•¶š‚ª‰½ƒoƒCƒg‚Å•\‚³‚ê‚é‚Ì‚©‚ğ•Ô‚·ŠÖ”
         int result = mblen(&text[index], MB_CUR_MAX);
 
         if (result < 0) {
@@ -693,13 +693,13 @@ uint32_t string_len(const char *text) {
     return count;
 }
 
-// text ã®ãƒã‚¤ãƒˆæ•°ã‚’è¿”ã™é–¢æ•°
+// text ‚ÌƒoƒCƒg”‚ğ•Ô‚·ŠÖ”
 size_t string_bytes(const char *text) {
     assert(text != NULL, "passed NULL to string_bytes(text)");
     size_t result = 0;
 
     while (true) {
-        // Cè¨€èªã®æ–‡å­—åˆ—ã¯å¿…ãšãƒŒãƒ«æ–‡å­—ã§çµ‚ã‚ã‚‹
+        // CŒ¾Œê‚Ì•¶š—ñ‚Í•K‚¸ƒkƒ‹•¶š‚ÅI‚í‚é
         if (text[result] == '\0') {
             return result;
         }
@@ -707,7 +707,7 @@ size_t string_bytes(const char *text) {
     }
 }
 
-// src ã® target_pos æ–‡å­—ç›®ã‚’è¿”ã™é–¢æ•°ã€‚ãƒãƒ«ãƒãƒã‚¤ãƒˆæ–‡å­—ï¼ˆæ—¥æœ¬èªãªã©ï¼‰å¯¾å¿œã€‚
+// src ‚Ì target_pos •¶š–Ú‚ğ•Ô‚·ŠÖ”Bƒ}ƒ‹ƒ`ƒoƒCƒg•¶ši“ú–{Œê‚È‚Çj‘Î‰B
 // requires to be freed!
 struct CharVector string_at(const char *src, size_t target_pos) {
     assert(src != NULL, "passed NULL to string_at(src)");
@@ -715,9 +715,9 @@ struct CharVector string_at(const char *src, size_t target_pos) {
     size_t index = 0;
     size_t pos = 0;
 
-    // Cè¨€èªã®æ–‡å­—åˆ—ã¯å¿…ãšãƒŒãƒ«æ–‡å­—ã§çµ‚ã‚ã‚‹
+    // CŒ¾Œê‚Ì•¶š—ñ‚Í•K‚¸ƒkƒ‹•¶š‚ÅI‚í‚é
     while (src[index] != '\0') {
-        // mblené–¢æ•°ã¯æŒ‡å®šã•ã‚ŒãŸæ–‡å­—ãŒä½•ãƒã‚¤ãƒˆã§è¡¨ã•ã‚Œã‚‹ã®ã‹ã‚’è¿”ã™é–¢æ•°
+        // mblenŠÖ”‚Íw’è‚³‚ê‚½•¶š‚ª‰½ƒoƒCƒg‚Å•\‚³‚ê‚é‚Ì‚©‚ğ•Ô‚·ŠÖ”
         int len = mblen(&src[index], MB_CUR_MAX);
 
         if (len < 0) {
@@ -725,8 +725,8 @@ struct CharVector string_at(const char *src, size_t target_pos) {
         }
 
         if (pos == target_pos) {
-            // output ã«1æ–‡å­—åˆ†ã®ãƒã‚¤ãƒˆã‚’è¿½åŠ ã—ã€
-            // æœ€å¾Œã«æ–‡å­—åˆ—ã®çµ‚ç«¯ã‚’è¡¨ã™ãŸã‚ã«ãƒŒãƒ«æ–‡å­—ã‚’è¿½åŠ ã—ã¦è¿”å´ã™ã‚‹ã€‚
+            // output ‚É1•¶š•ª‚ÌƒoƒCƒg‚ğ’Ç‰Á‚µA
+            // ÅŒã‚É•¶š—ñ‚ÌI’[‚ğ•\‚·‚½‚ß‚Éƒkƒ‹•¶š‚ğ’Ç‰Á‚µ‚Ä•Ô‹p‚·‚éB
             struct CharVector output = char_vector_new();
 
             for (size_t i = 0; i < (size_t)len; i++) {
@@ -741,43 +741,43 @@ struct CharVector string_at(const char *src, size_t target_pos) {
         pos += 1;
     }
 
-    // ã“ã“ã«åˆ°é”ã—ãŸã¨ã„ã†ã“ã¨ã¯ã€æŒ‡å®šã•ã‚ŒãŸå ´æ‰€ã«ã¯æ–‡å­—ãŒãªã‹ã£ãŸã¨ã„ã†ã“ã¨ãªã®ã§ã€
-    // ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’è¡¨ç¤ºã—failureãƒã‚¯ãƒ­ã«ã‚ˆã£ã¦ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚’å³çµ‚äº†ã™ã‚‹ã€‚
+    // ‚±‚±‚É“’B‚µ‚½‚Æ‚¢‚¤‚±‚Æ‚ÍAw’è‚³‚ê‚½êŠ‚É‚Í•¶š‚ª‚È‚©‚Á‚½‚Æ‚¢‚¤‚±‚Æ‚È‚Ì‚ÅA
+    // ƒGƒ‰[ƒƒbƒZ[ƒW‚ğ•\¦‚µfailureƒ}ƒNƒ‚É‚æ‚Á‚ÄƒvƒƒOƒ‰ƒ€‚ğ‘¦I—¹‚·‚éB
     failure("there is no char on specific position. text: \"%s\", pos: \"%d\"",
             src, target_pos);
 }
 
-// a ã¨ b ãŒç­‰ã—ã„ã‹ã‚’åˆ¤å®šã™ã‚‹é–¢æ•°
+// a ‚Æ b ‚ª“™‚µ‚¢‚©‚ğ”»’è‚·‚éŠÖ”
 bool string_eq(const char *a, const char *b) {
     assert(a != NULL, "passed NULL to string_at(a)");
     assert(b != NULL, "passed NULL to string_at(b)");
 
     for (size_t index = 0;; index++) {
-        // a ã¨ b ãŒ1è¦ç´ ã§ã‚‚ç­‰ã—ããªã‹ã£ãŸã‚‰ã€
-        // ãã®æ™‚ç‚¹ã§2ã¤ã¯é•ã†æ–‡å­—åˆ—ãªã®ã§falseã‚’è¿”ã™ã€‚
+        // a ‚Æ b ‚ª1—v‘f‚Å‚à“™‚µ‚­‚È‚©‚Á‚½‚çA
+        // ‚»‚Ì“_‚Å2‚Â‚Íˆá‚¤•¶š—ñ‚È‚Ì‚Åfalse‚ğ•Ô‚·B
         if (a[index] != b[index]) {
             return false;
         }
 
-        // aã¨bãŒãƒŒãƒ«æ–‡å­—ã®æ™‚ã€ä¸¡æ–¹ã®æ–‡å­—åˆ—ã¯åŒã˜å ´æ‰€ã§çµ‚ã‚ã£ãŸã¨ã„ã†ã“ã¨ãªã®ã§ã€2ã¤ã¯ç­‰ã—ã„ã€‚
-        // trueã‚’è¿”å´ã™ã‚‹ã€‚
+        // a‚Æb‚ªƒkƒ‹•¶š‚ÌA—¼•û‚Ì•¶š—ñ‚Í“¯‚¶êŠ‚ÅI‚í‚Á‚½‚Æ‚¢‚¤‚±‚Æ‚È‚Ì‚ÅA2‚Â‚Í“™‚µ‚¢B
+        // true‚ğ•Ô‹p‚·‚éB
         if (a[index] == '\0') {
             return true;
         }
     }
 }
 
-// formaté–¢æ•°ã®va_listç‰ˆ
+// formatŠÖ”‚Ìva_list”Å
 struct CharVector vformat(const char *format, va_list args) {
-    // ä¸€åº¦vsnprintfã‚’NULLã«å¯¾ã—ã¦å‘¼ã³å‡ºã—ã€çµæœã®æ–‡å­—åˆ—ã‚’æ ¼ç´ã™ã‚‹
-    // ã®ã«å¿…è¦ãªãƒã‚¤ãƒˆæ•°ã‚’æ±‚ã‚ã‚‹ã€‚
+    // ˆê“xvsnprintf‚ğNULL‚É‘Î‚µ‚ÄŒÄ‚Ño‚µAŒ‹‰Ê‚Ì•¶š—ñ‚ğŠi”[‚·‚é
+    // ‚Ì‚É•K—v‚ÈƒoƒCƒg”‚ğ‹‚ß‚éB
     // + 1 for \0
     const size_t need_bytes = vsnprintf(NULL, 0, format, args) + 1;
 
     struct CharVector result = char_vector_new();
     char_vector_reserve(&result, need_bytes);
 
-    // å®Ÿéš›ã«æ›¸ãè¾¼ã‚€ã€‚
+    // ÀÛ‚É‘‚«‚ŞB
     // we need to overwrite length manually because vsnprintf writes to memory
     // directly.
     result.length = vsnprintf(result.pointer, need_bytes, format, args);
@@ -785,8 +785,8 @@ struct CharVector vformat(const char *format, va_list args) {
     return result;
 }
 
-// printfé–¢æ•°ãŒæ¨™æº–å‡ºåŠ›ã«å¯¾ã—ã¦çµæœã‚’æ›¸ãè¾¼ã‚€ã®ã«å¯¾ã—ã€
-// ã“ã®é–¢æ•°ã¯ãƒ¡ãƒ¢ãƒªä¸Šã«æ›¸ãè¾¼ã¿ã€ãã®ãƒ¡ãƒ¢ãƒªé ˜åŸŸã‚’è¿”ã™é–¢æ•°ã€‚
+// printfŠÖ”‚ª•W€o—Í‚É‘Î‚µ‚ÄŒ‹‰Ê‚ğ‘‚«‚Ş‚Ì‚É‘Î‚µA
+// ‚±‚ÌŠÖ”‚Íƒƒ‚ƒŠã‚É‘‚«‚İA‚»‚Ìƒƒ‚ƒŠ—Ìˆæ‚ğ•Ô‚·ŠÖ”B
 struct CharVector format(const char *format, ...) {
     va_list args;
     va_start(args, format);
@@ -801,7 +801,7 @@ struct CharVector format(const char *format, ...) {
 #include <stdarg.h>
 #include <stdio.h>
 
-// Terminal æ§‹é€ ä½“ã‚’å–å¾—ã™ã‚‹é–¢æ•°
+// Terminal \‘¢‘Ì‚ğæ“¾‚·‚éŠÖ”
 struct Terminal get_term() {
     HANDLE console_handle = GetStdHandle(STD_OUTPUT_HANDLE);
     HANDLE stdin_handle = GetStdHandle(STD_INPUT_HANDLE);
@@ -833,7 +833,7 @@ struct Terminal get_term() {
     };
 }
 
-// ã‚¿ãƒ¼ãƒŸãƒŠãƒ«ã‚’ç©ºç™½ã«ã™ã‚‹é–¢æ•°
+// ƒ^[ƒ~ƒiƒ‹‚ğ‹ó”’‚É‚·‚éŠÖ”
 void term_clear(struct Terminal *terminal) {
     DWORD size = terminal->origin_buffer_info.dwSize.X
                  * terminal->origin_buffer_info.dwSize.Y;
@@ -846,7 +846,7 @@ void term_clear(struct Terminal *terminal) {
     SetConsoleCursorPosition(terminal->game_buffer, pos);
 }
 
-// ã‚«ãƒ¼ã‚½ãƒ«ã®å¯è¦–çŠ¶æ…‹ã‚’è¨­å®šã™ã‚‹é–¢æ•°
+// ƒJ[ƒ\ƒ‹‚Ì‰Â‹ó‘Ô‚ğİ’è‚·‚éŠÖ”
 void term_set_cursor_visible(struct Terminal *terminal, bool visible) {
     assert(terminal != NULL,
            "passed NULL to term_set_cursor_visible(terminal)");
@@ -858,7 +858,7 @@ void term_set_cursor_visible(struct Terminal *terminal, bool visible) {
     SetConsoleCursorInfo(terminal->game_buffer, &info);
 }
 
-// ã‚¿ãƒ¼ãƒŸãƒŠãƒ«ã®å‰æ™¯è‰²ã‚’è¨­å®šã™ã‚‹é–¢æ•°
+// ƒ^[ƒ~ƒiƒ‹‚Ì‘OŒiF‚ğİ’è‚·‚éŠÖ”
 void term_set_fg(struct Terminal *terminal, enum TerminalColor color) {
     assert(terminal != NULL, "passed NULL to term_set_fg(terminal)");
 
@@ -885,7 +885,7 @@ void term_set_fg(struct Terminal *terminal, enum TerminalColor color) {
     SetConsoleTextAttribute(terminal->game_buffer, win_color);
 }
 
-// ã‚¿ãƒ¼ãƒŸãƒŠãƒ«ã®èƒŒæ™¯è‰²ã‚’è¨­å®šã™ã‚‹é–¢æ•°
+// ƒ^[ƒ~ƒiƒ‹‚Ì”wŒiF‚ğİ’è‚·‚éŠÖ”
 void term_set_bg(struct Terminal *terminal, enum TerminalColor color) {
     assert(terminal != NULL, "passed NULL to term_set_bg(terminal)");
 
@@ -912,7 +912,7 @@ void term_set_bg(struct Terminal *terminal, enum TerminalColor color) {
     SetConsoleTextAttribute(terminal->game_buffer, win_color);
 }
 
-// ã‚«ãƒ¼ã‚½ãƒ«ã®å ´æ‰€ã‚’è¨­å®šã™ã‚‹é–¢æ•°
+// ƒJ[ƒ\ƒ‹‚ÌêŠ‚ğİ’è‚·‚éŠÖ”
 void term_set_cursor_pos(struct Terminal *terminal, size_t x, size_t y) {
     assert(terminal != NULL, "passed NULL to term_set_cursor_pos(terminal)");
 
@@ -920,7 +920,7 @@ void term_set_cursor_pos(struct Terminal *terminal, size_t x, size_t y) {
     SetConsoleCursorPosition(terminal->game_buffer, pos);
 }
 
-// Terminal æ§‹é€ ä½“ã‚’ç ´å£Šã—ã¦å…ƒã®çŠ¶æ…‹ã«æˆ»ã™é–¢æ•°
+// Terminal \‘¢‘Ì‚ğ”j‰ó‚µ‚ÄŒ³‚Ìó‘Ô‚É–ß‚·ŠÖ”
 void term_reset(struct Terminal *terminal) {
     assert(terminal != NULL, "passed NULL to term_reset(terminal)");
 
@@ -934,12 +934,12 @@ void term_reset(struct Terminal *terminal) {
     CloseHandle(terminal->console_handle);
 }
 
-// ã‚¿ãƒ¼ãƒŸãƒŠãƒ«ã‹ã‚‰1æ–‡å­—å…¥åŠ›ã‚’å–å¾—ã™ã‚‹é–¢æ•°ã€‚term_poll_eventã«ç½®ãæ›ãˆã‚‰ã‚ŒãŸãŸã‚ä½¿ã‚ã‚Œã¦ã„ãªã„ã€‚
+// ƒ^[ƒ~ƒiƒ‹‚©‚ç1•¶š“ü—Í‚ğæ“¾‚·‚éŠÖ”Bterm_poll_event‚É’u‚«Š·‚¦‚ç‚ê‚½‚½‚ßg‚í‚ê‚Ä‚¢‚È‚¢B
 char term_get_char() {
     return _getch();
 }
 
-// ã‚¿ãƒ¼ãƒŸãƒŠãƒ«ã«æ–‡å­—ã‚’è¡¨ç¤ºã™ã‚‹é–¢æ•°ã€‚printfã«éå¸¸ã«ä¼¼ã¦ã„ã‚‹ã€‚
+// ƒ^[ƒ~ƒiƒ‹‚É•¶š‚ğ•\¦‚·‚éŠÖ”Bprintf‚É”ñí‚É—‚Ä‚¢‚éB
 void term_print(struct Terminal *terminal, const char *format, ...) {
     va_list args;
 
@@ -955,7 +955,7 @@ void term_print(struct Terminal *terminal, const char *format, ...) {
     char_vector_free(&text);
 }
 
-// ã‚¿ãƒ¼ãƒŸãƒŠãƒ«ã‹ã‚‰1ã‚¤ãƒ™ãƒ³ãƒˆå–å¾—ã™ã‚‹é–¢æ•°ã€‚
+// ƒ^[ƒ~ƒiƒ‹‚©‚ç1ƒCƒxƒ“ƒgæ“¾‚·‚éŠÖ”B
 struct TerminalEvent term_poll_event(struct Terminal *terminal) {
     INPUT_RECORD buffer[1];
     DWORD read;
@@ -998,50 +998,50 @@ struct TerminalEvent term_poll_event(struct Terminal *terminal) {
 #include <stdio.h>
 #include <stdlib.h>
 
-// ãƒ©ãƒ³ãƒ€ãƒ ãªå˜èªã‚’è¿”ã™é–¢æ•°
+// ƒ‰ƒ“ƒ_ƒ€‚È’PŒê‚ğ•Ô‚·ŠÖ”
 const struct Word random_word() {
-    // å˜èªä¸€è¦§
+    // ’PŒêˆê——
     // ../scripts/wordsGen.py
     const struct Word WORDS[] = {
-        {.char_count = 3, .pointer = "ãŠã‹ã‚†"},
-        {.char_count = 3, .pointer = "ã¤ã†ã¡"},
-        {.char_count = 2, .pointer = "ã¤ã‚"},
-        {.char_count = 3, .pointer = "ã¾ã†ã™"},
-        {.char_count = 3, .pointer = "ã‹ã„ã‚"},
-        {.char_count = 4, .pointer = "ã®ã¿ã‚‚ã®"},
-        {.char_count = 3, .pointer = "ã©ã†ãŒ"},
-        {.char_count = 4, .pointer = "ã­ã‚‹ã¾ãˆ"},
-        {.char_count = 4, .pointer = "ã›ã‚“ã•ãƒ¼"},
-        {.char_count = 2, .pointer = "ã­ã“"},
-        {.char_count = 3, .pointer = "ã‚ã„ã‚“"},
-        {.char_count = 3, .pointer = "ã“ã‚‹ã"},
-        {.char_count = 5, .pointer = "ã¯ã‚€ã™ãŸãƒ¼"},
-        {.char_count = 2, .pointer = "ã‹ã"},
-        {.char_count = 5, .pointer = "ã“ã‚“ããƒ¼ã‚‹"},
-        {.char_count = 3, .pointer = "ã’ãƒ¼ã‚€"},
-        {.char_count = 3, .pointer = "ã†ã•ã"},
-        {.char_count = 4, .pointer = "ã‚ãƒ¼ã¾ã˜"},
-        {.char_count = 6, .pointer = "ãŸã„ã‚€ã‚‰ã„ã‚“"},
-        {.char_count = 3, .pointer = "ã›ãƒ¼ã¶"},
-        {.char_count = 4, .pointer = "ã‹ã‚“ã™ã†"},
-        {.char_count = 4, .pointer = "ã“ã†ã›ã‚“"},
+        {.char_count = 3, .pointer = "‚¨‚©‚ä"},
+        {.char_count = 3, .pointer = "‚Â‚¤‚¿"},
+        {.char_count = 2, .pointer = "‚Â‚ß"},
+        {.char_count = 3, .pointer = "‚Ü‚¤‚·"},
+        {.char_count = 3, .pointer = "‚©‚¢‚ë"},
+        {.char_count = 4, .pointer = "‚Ì‚İ‚à‚Ì"},
+        {.char_count = 3, .pointer = "‚Ç‚¤‚ª"},
+        {.char_count = 4, .pointer = "‚Ë‚é‚Ü‚¦"},
+        {.char_count = 4, .pointer = "‚¹‚ñ‚³["},
+        {.char_count = 2, .pointer = "‚Ë‚±"},
+        {.char_count = 3, .pointer = "‚í‚¢‚ñ"},
+        {.char_count = 3, .pointer = "‚±‚é‚­"},
+        {.char_count = 5, .pointer = "‚Í‚Ş‚·‚½["},
+        {.char_count = 2, .pointer = "‚©‚¬"},
+        {.char_count = 5, .pointer = "‚±‚ñ‚»[‚é"},
+        {.char_count = 3, .pointer = "‚°[‚Ş"},
+        {.char_count = 3, .pointer = "‚¤‚³‚¬"},
+        {.char_count = 4, .pointer = "‚ë[‚Ü‚¶"},
+        {.char_count = 6, .pointer = "‚½‚¢‚Ş‚ç‚¢‚ñ"},
+        {.char_count = 3, .pointer = "‚¹[‚Ô"},
+        {.char_count = 4, .pointer = "‚©‚ñ‚·‚¤"},
+        {.char_count = 4, .pointer = "‚±‚¤‚¹‚ñ"},
     };
 
-    // å˜èªãƒªã‚¹ãƒˆã®è¦ç´ æ•°
+    // ’PŒêƒŠƒXƒg‚Ì—v‘f”
     const size_t WORDS_LEN = sizeof(WORDS) / sizeof(WORDS[0]);
 
-    // ãƒ©ãƒ³ãƒ€ãƒ ãªå ´æ‰€ã‚’é¸ã³è¿”å´ã™ã‚‹
+    // ƒ‰ƒ“ƒ_ƒ€‚ÈêŠ‚ğ‘I‚Ñ•Ô‹p‚·‚é
     const size_t index = rand() % WORDS_LEN;
     const struct Word word = WORDS[index];
 
     return word;
 }
 
-// CharVectorã¨ã»ã¼åŒã˜ãªã®ã§ã€è©³ã—ã„èª¬æ˜ã¯çœç•¥ã—ã¾ã™ã€‚
+// CharVector‚Æ‚Ù‚Ú“¯‚¶‚È‚Ì‚ÅAÚ‚µ‚¢à–¾‚ÍÈ—ª‚µ‚Ü‚·B
 
 #define INITIAL_CAPACITY 2
 
-// æ–°ã—ã„ WordVector ã‚’ä½œæˆã™ã‚‹é–¢æ•°
+// V‚µ‚¢ WordVector ‚ğì¬‚·‚éŠÖ”
 struct WordVector word_vector_new(void) {
     const struct WordVector result = {
         .pointer = malloc(sizeof(struct Word) * INITIAL_CAPACITY),
@@ -1054,7 +1054,7 @@ struct WordVector word_vector_new(void) {
     return result;
 }
 
-// self ã® index ç•ªç›®ã®è¦ç´ ã‚’å–å¾—ã™ã‚‹é–¢æ•°
+// self ‚Ì index ”Ô–Ú‚Ì—v‘f‚ğæ“¾‚·‚éŠÖ”
 struct Word word_vector_get(struct WordVector *self, size_t index) {
     assert(
         index < self->length,
@@ -1064,7 +1064,7 @@ struct Word word_vector_get(struct WordVector *self, size_t index) {
     return self->pointer[index];
 }
 
-// self ã®æœ€å¾Œã« value ã‚’è¿½åŠ ã™ã‚‹é–¢æ•°
+// self ‚ÌÅŒã‚É value ‚ğ’Ç‰Á‚·‚éŠÖ”
 void word_vector_push(struct WordVector *self, struct Word value) {
     assert(self != NULL, "passed NULL to word_vector_push");
     assert(self->pointer != NULL, "passed freed or invalid WordVector");
@@ -1080,7 +1080,7 @@ void word_vector_push(struct WordVector *self, struct Word value) {
     self->length += 1;
 }
 
-// self ã®æœ€å¾Œã®è¦ç´ ã‚’æ¶ˆå»ã™ã‚‹é–¢æ•°
+// self ‚ÌÅŒã‚Ì—v‘f‚ğÁ‹‚·‚éŠÖ”
 struct Word word_vector_pop(struct WordVector *self) {
     assert(self != NULL, "passed NULL to word_vector_push(self)");
     assert(self->pointer != NULL, "passed freed or invalid WordVector");
@@ -1092,7 +1092,7 @@ struct Word word_vector_pop(struct WordVector *self) {
     return result;
 }
 
-// self ã‚’é–‹æ”¾ã™ã‚‹é–¢æ•°
+// self ‚ğŠJ•ú‚·‚éŠÖ”
 void word_vector_free(struct WordVector *self) {
     assert(self != NULL, "passed NULL to word_vector_push");
     assert(self->pointer != NULL, "passed freed or invalid WordVector");
@@ -1101,7 +1101,7 @@ void word_vector_free(struct WordVector *self) {
     self->pointer = NULL;
 }
 
-// self ã«æ–°ãŸã«sizeé ˜åŸŸç¢ºä¿ã™ã‚‹é–¢æ•°
+// self ‚ÉV‚½‚Ésize—ÌˆæŠm•Û‚·‚éŠÖ”
 const struct WordVector random_words(size_t count) {
     struct WordVector result = word_vector_new();
 
